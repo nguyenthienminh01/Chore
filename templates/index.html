@@ -1,32 +1,26 @@
 <!DOCTYPE html>
 <html lang="vi">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WiFi Security Scanner | Professional Penetration Testing</title>
+    <title>WIFISEC | Matrix Edition - WiFi Penetration Testing</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
     <style>
         :root {
-            --bg-primary: #0a0a0f;
-            --bg-secondary: #0d1117;
-            --bg-tertiary: #161b22;
-            --bg-card: rgba(13, 17, 23, 0.8);
-            --border-color: rgba(0, 255, 136, 0.2);
-            --border-glow: rgba(0, 255, 136, 0.5);
-            --text-primary: #00ff88;
-            --text-secondary: #58a6ff;
-            --text-muted: #8b949e;
-            --accent-cyan: #00ffff;
-            --accent-green: #00ff88;
-            --accent-red: #ff0040;
-            --accent-orange: #ff6b35;
-            --accent-yellow: #f7c948;
-            --accent-purple: #bd00ff;
-            --glow-green: 0 0 20px rgba(0, 255, 136, 0.5);
-            --glow-cyan: 0 0 20px rgba(0, 255, 255, 0.5);
-            --glow-red: 0 0 20px rgba(255, 0, 64, 0.5);
+            --matrix-green: #00ff41;
+            --matrix-dark-green: #003b00;
+            --matrix-light-green: #39ff14;
+            --bg-black: #000000;
+            --bg-dark: #0a0a0a;
+            --text-green: #00ff41;
+            --text-dim: #00802b;
+            --glow-green: 0 0 10px #00ff41, 0 0 20px #00ff41, 0 0 30px #00ff41;
+            --border-green: rgba(0, 255, 65, 0.3);
         }
 
         * {
@@ -36,45 +30,138 @@
         }
 
         body {
-            font-family: 'JetBrains Mono', monospace;
-            background: var(--bg-primary);
-            color: var(--text-primary);
+            font-family: 'Share Tech Mono', monospace;
+            background: var(--bg-black);
+            color: var(--text-green);
             min-height: 100vh;
             overflow-x: hidden;
         }
 
-        /* Matrix Rain Canvas */
-        #matrix-canvas {
+        /* Matrix Canvas - Full Screen */
+        #matrix-bg {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            pointer-events: none;
             z-index: 0;
-            opacity: 0.15;
         }
 
-        /* Scanlines Effect */
-        .scanlines {
+        /* CRT Scanlines */
+        .crt-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
             pointer-events: none;
-            z-index: 1000;
-            background: repeating-linear-gradient(
-                0deg,
-                rgba(0, 0, 0, 0.1) 0px,
-                rgba(0, 0, 0, 0.1) 1px,
-                transparent 1px,
-                transparent 2px
-            );
-            opacity: 0.3;
+            z-index: 1;
+            background:
+                repeating-linear-gradient(0deg,
+                    rgba(0, 0, 0, 0.15) 0px,
+                    rgba(0, 0, 0, 0.15) 1px,
+                    transparent 1px,
+                    transparent 2px);
         }
 
-        /* Main Container */
+        /* Flicker Effect */
+        .crt-overlay::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 255, 65, 0.02);
+            animation: flicker 0.15s infinite;
+        }
+
+        @keyframes flicker {
+            0% {
+                opacity: 0.27861;
+            }
+
+            5% {
+                opacity: 0.34769;
+            }
+
+            10% {
+                opacity: 0.23604;
+            }
+
+            15% {
+                opacity: 0.90626;
+            }
+
+            20% {
+                opacity: 0.18128;
+            }
+
+            25% {
+                opacity: 0.83891;
+            }
+
+            30% {
+                opacity: 0.65583;
+            }
+
+            35% {
+                opacity: 0.67807;
+            }
+
+            40% {
+                opacity: 0.26559;
+            }
+
+            45% {
+                opacity: 0.84693;
+            }
+
+            50% {
+                opacity: 0.96019;
+            }
+
+            55% {
+                opacity: 0.08594;
+            }
+
+            60% {
+                opacity: 0.20313;
+            }
+
+            65% {
+                opacity: 0.71988;
+            }
+
+            70% {
+                opacity: 0.53455;
+            }
+
+            75% {
+                opacity: 0.37288;
+            }
+
+            80% {
+                opacity: 0.71428;
+            }
+
+            85% {
+                opacity: 0.70419;
+            }
+
+            90% {
+                opacity: 0.7003;
+            }
+
+            95% {
+                opacity: 0.36108;
+            }
+
+            100% {
+                opacity: 0.24387;
+            }
+        }
+
         .container {
             position: relative;
             z-index: 10;
@@ -88,81 +175,124 @@
             text-align: center;
             padding: 40px 20px;
             margin-bottom: 30px;
-            position: relative;
         }
 
-        .header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 80%;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--accent-green), transparent);
-        }
-
-        .logo {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 3rem;
-            font-weight: 900;
-            letter-spacing: 4px;
-            margin-bottom: 10px;
+        .ascii-logo {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.6rem;
+            line-height: 1.1;
+            white-space: pre;
+            color: var(--matrix-green);
             text-shadow: var(--glow-green);
-            animation: glitch 3s infinite;
+            animation: textGlow 2s infinite alternate;
+            margin-bottom: 20px;
         }
 
-        .logo span {
-            color: var(--accent-cyan);
-        }
+        @keyframes textGlow {
+            from {
+                text-shadow: 0 0 5px #00ff41, 0 0 10px #00ff41;
+            }
 
-        @keyframes glitch {
-            0%, 90%, 100% { transform: translate(0); }
-            91% { transform: translate(-2px, 1px); filter: hue-rotate(90deg); }
-            92% { transform: translate(2px, -1px); }
-            93% { transform: translate(-1px, 2px); filter: hue-rotate(0deg); }
+            to {
+                text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41, 0 0 30px #00ff41;
+            }
         }
 
         .subtitle {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            letter-spacing: 3px;
+            color: var(--text-dim);
+            font-size: 1rem;
+            letter-spacing: 5px;
             text-transform: uppercase;
         }
 
         .status-bar {
             display: flex;
             justify-content: center;
-            gap: 30px;
-            margin-top: 20px;
-            font-size: 0.8rem;
+            gap: 40px;
+            margin-top: 25px;
+            font-size: 0.9rem;
         }
 
         .status-item {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: 10px;
         }
 
         .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background: var(--accent-green);
-            box-shadow: var(--glow-green);
-            animation: pulse 2s infinite;
+            width: 12px;
+            height: 12px;
+            background: var(--matrix-green);
+            box-shadow: 0 0 10px var(--matrix-green), 0 0 20px var(--matrix-green);
+            animation: blink 1s infinite;
         }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.3;
+            }
+        }
+
+        /* Terminal Box Style */
+        .terminal-box {
+            background: rgba(0, 20, 0, 0.8);
+            border: 1px solid var(--border-green);
+            border-radius: 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .terminal-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 25px;
+            background: linear-gradient(90deg,
+                    var(--matrix-dark-green) 0%,
+                    var(--matrix-green) 50%,
+                    var(--matrix-dark-green) 100%);
+            opacity: 0.3;
+        }
+
+        .terminal-header {
+            background: rgba(0, 40, 0, 0.9);
+            padding: 8px 15px;
+            border-bottom: 1px solid var(--border-green);
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .terminal-title {
+            font-family: 'Share Tech Mono', monospace;
+            font-size: 0.9rem;
+            color: var(--matrix-green);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .terminal-body {
+            padding: 20px;
         }
 
         /* Main Grid */
         .main-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 30px;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
         }
 
         @media (max-width: 1000px) {
@@ -171,946 +301,750 @@
             }
         }
 
-        /* Panels */
-        .panel {
-            background: var(--bg-card);
-            border: 1px solid var(--border-color);
-            border-radius: 12px;
-            overflow: hidden;
-            backdrop-filter: blur(10px);
-            position: relative;
-        }
-
-        .panel::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 2px;
-            background: linear-gradient(90deg, var(--accent-green), var(--accent-cyan), var(--accent-purple));
-        }
-
-        .panel-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 20px 25px;
-            border-bottom: 1px solid var(--border-color);
-            background: rgba(0, 0, 0, 0.3);
-        }
-
-        .panel-title {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.1rem;
-            font-weight: 600;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .panel-title-icon {
-            font-size: 1.3rem;
-        }
-
-        .panel-body {
-            padding: 25px;
-            min-height: 400px;
-            max-height: 600px;
-            overflow-y: auto;
-        }
-
-        /* Custom Scrollbar */
-        .panel-body::-webkit-scrollbar {
-            width: 6px;
-        }
-
-        .panel-body::-webkit-scrollbar-track {
-            background: var(--bg-secondary);
-        }
-
-        .panel-body::-webkit-scrollbar-thumb {
-            background: var(--accent-green);
-            border-radius: 3px;
-        }
-
-        /* Buttons */
-        .btn {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 0.85rem;
-            font-weight: 600;
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .btn-primary {
-            background: linear-gradient(135deg, var(--accent-green), #00cc6a);
-            color: var(--bg-primary);
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
-        }
-
-        .btn-primary:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 0 30px rgba(0, 255, 136, 0.5);
-        }
-
-        .btn-primary:disabled {
-            background: var(--text-muted);
-            box-shadow: none;
-            cursor: not-allowed;
-            transform: none;
-        }
-
-        .btn-secondary {
-            background: transparent;
-            color: var(--accent-cyan);
-            border: 1px solid var(--accent-cyan);
-        }
-
-        .btn-secondary:hover {
-            background: rgba(0, 255, 255, 0.1);
-            box-shadow: var(--glow-cyan);
-        }
-
-        /* Network Cards */
-        .network-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .network-card {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--border-color);
-            border-radius: 8px;
-            padding: 15px 20px;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .network-card:hover {
-            border-color: var(--accent-green);
-            background: rgba(0, 255, 136, 0.05);
-            transform: translateX(5px);
-        }
-
-        .network-info {
-            flex: 1;
-        }
-
-        .network-ssid {
-            font-weight: 600;
+        /* Inputs */
+        .matrix-select {
+            width: 100%;
+            padding: 12px 15px;
+            background: rgba(0, 0, 0, 0.8);
+            border: 1px solid var(--matrix-green);
+            color: var(--matrix-green);
+            font-family: 'Share Tech Mono', monospace;
             font-size: 1rem;
-            margin-bottom: 5px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .network-details {
-            font-size: 0.75rem;
-            color: var(--text-muted);
-            display: flex;
-            gap: 15px;
-        }
-
-        .network-signal {
-            text-align: right;
-        }
-
-        .signal-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            font-family: 'Orbitron', sans-serif;
-        }
-
-        .signal-excellent { color: var(--accent-green); }
-        .signal-good { color: var(--accent-cyan); }
-        .signal-medium { color: var(--accent-yellow); }
-        .signal-weak { color: var(--accent-orange); }
-        .signal-poor { color: var(--accent-red); }
-
-        .signal-bar {
-            width: 60px;
-            height: 4px;
-            background: var(--bg-secondary);
-            border-radius: 2px;
-            margin-top: 5px;
-            overflow: hidden;
-        }
-
-        .signal-fill {
-            height: 100%;
-            border-radius: 2px;
-            transition: width 0.5s ease;
-        }
-
-        /* Password Input */
-        .input-group {
-            margin-bottom: 20px;
-        }
-
-        .input-label {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 0.85rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .input-wrapper {
-            position: relative;
-            display: flex;
-            gap: 10px;
-        }
-
-        .input-field {
-            flex: 1;
-            background: var(--bg-secondary);
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            padding: 15px 20px;
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 1rem;
-            color: var(--text-primary);
-            transition: all 0.3s ease;
-        }
-
-        .input-field:focus {
+            cursor: pointer;
             outline: none;
-            border-color: var(--accent-green);
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.2);
         }
 
-        .input-field::placeholder {
-            color: var(--text-muted);
+        .matrix-select:focus {
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.5);
         }
 
-        .btn-toggle-password {
-            width: 50px;
-            background: var(--bg-secondary);
-            border: 2px solid var(--border-color);
-            border-radius: 8px;
-            cursor: pointer;
-            color: var(--text-muted);
-            font-size: 1.2rem;
-            transition: all 0.3s ease;
+        .matrix-select option {
+            background: #000;
+            color: var(--matrix-green);
         }
 
-        .btn-toggle-password:hover {
-            border-color: var(--accent-cyan);
-            color: var(--accent-cyan);
-        }
-
-        /* Results */
-        .results-section {
-            margin-top: 25px;
-        }
-
-        .result-card {
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid var(--border-color);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 15px;
-        }
-
-        .result-header {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            margin-bottom: 15px;
-        }
-
-        .result-title {
-            font-size: 0.9rem;
-            color: var(--text-muted);
-            text-transform: uppercase;
-            letter-spacing: 1px;
-        }
-
-        .rating-badge {
-            font-family: 'Orbitron', sans-serif;
+        /* Matrix Button */
+        .matrix-btn {
+            font-family: 'Share Tech Mono', monospace;
             font-size: 1rem;
-            font-weight: 700;
-            padding: 5px 15px;
-            border-radius: 20px;
-            text-shadow: 0 0 10px currentColor;
-        }
-
-        .rating-critical { background: rgba(255, 0, 64, 0.2); color: var(--accent-red); border: 1px solid var(--accent-red); }
-        .rating-weak { background: rgba(255, 107, 53, 0.2); color: var(--accent-orange); border: 1px solid var(--accent-orange); }
-        .rating-medium { background: rgba(247, 201, 72, 0.2); color: var(--accent-yellow); border: 1px solid var(--accent-yellow); }
-        .rating-strong { background: rgba(0, 255, 136, 0.2); color: var(--accent-green); border: 1px solid var(--accent-green); }
-        .rating-excellent { background: rgba(0, 255, 255, 0.2); color: var(--accent-cyan); border: 1px solid var(--accent-cyan); }
-
-        /* Progress Bar */
-        .strength-bar {
-            height: 8px;
-            background: var(--bg-secondary);
-            border-radius: 4px;
-            overflow: hidden;
-            margin-bottom: 20px;
-        }
-
-        .strength-fill {
-            height: 100%;
-            border-radius: 4px;
-            transition: all 0.5s ease;
+            padding: 15px 30px;
+            background: transparent;
+            border: 2px solid var(--matrix-green);
+            color: var(--matrix-green);
+            cursor: pointer;
+            text-transform: uppercase;
+            letter-spacing: 3px;
             position: relative;
             overflow: hidden;
+            transition: all 0.3s;
+            width: 100%;
+            margin-top: 15px;
         }
 
-        .strength-fill::after {
+        .matrix-btn::before {
             content: '';
             position: absolute;
             top: 0;
             left: -100%;
             width: 100%;
             height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
-            animation: shimmer 2s infinite;
+            background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.3), transparent);
+            transition: left 0.5s;
         }
 
-        @keyframes shimmer {
-            100% { left: 100%; }
+        .matrix-btn:hover::before {
+            left: 100%;
         }
 
-        /* Stats Grid */
+        .matrix-btn:hover {
+            background: rgba(0, 255, 65, 0.1);
+            box-shadow: 0 0 30px rgba(0, 255, 65, 0.5), inset 0 0 30px rgba(0, 255, 65, 0.1);
+            text-shadow: 0 0 10px var(--matrix-green);
+        }
+
+        .matrix-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .matrix-btn.danger {
+            border-color: #ff0040;
+            color: #ff0040;
+        }
+
+        .matrix-btn.danger:hover {
+            background: rgba(255, 0, 64, 0.1);
+            box-shadow: 0 0 30px rgba(255, 0, 64, 0.5);
+        }
+
+        /* Stats Display */
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(2, 1fr);
+            grid-template-columns: repeat(4, 1fr);
             gap: 15px;
-            margin-bottom: 20px;
+            margin: 20px 0;
         }
 
-        .stat-item {
-            background: rgba(0, 0, 0, 0.3);
+        @media (max-width: 800px) {
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .stat-box {
+            background: rgba(0, 0, 0, 0.6);
+            border: 1px solid var(--border-green);
             padding: 15px;
-            border-radius: 8px;
             text-align: center;
-            border: 1px solid transparent;
-            transition: all 0.3s ease;
-        }
-
-        .stat-item:hover {
-            border-color: var(--border-color);
-        }
-
-        .stat-value {
-            font-family: 'Orbitron', sans-serif;
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--accent-cyan);
         }
 
         .stat-label {
             font-size: 0.7rem;
-            color: var(--text-muted);
+            color: var(--text-dim);
             text-transform: uppercase;
-            margin-top: 5px;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
         }
 
-        /* Checks List */
-        .checks-list {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
+        .stat-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            color: var(--matrix-green);
+            text-shadow: 0 0 10px var(--matrix-green);
         }
 
-        .check-item {
+        .stat-value.active {
+            color: var(--matrix-light-green);
+            animation: valuePulse 1s infinite;
+        }
+
+        @keyframes valuePulse {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.7;
+            }
+        }
+
+        /* Progress */
+        .progress-container {
+            margin: 20px 0;
+        }
+
+        .progress-label {
             display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 8px 12px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 6px;
+            justify-content: space-between;
+            margin-bottom: 8px;
             font-size: 0.85rem;
         }
 
-        .check-icon {
-            width: 20px;
+        .progress-bar {
             height: 20px;
-            border-radius: 50%;
+            background: rgba(0, 40, 0, 0.8);
+            border: 1px solid var(--border-green);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg,
+                    var(--matrix-dark-green),
+                    var(--matrix-green),
+                    var(--matrix-light-green));
+            box-shadow: 0 0 20px var(--matrix-green);
+            transition: width 0.3s;
+        }
+
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: repeating-linear-gradient(90deg,
+                    transparent 0px,
+                    transparent 10px,
+                    rgba(0, 0, 0, 0.3) 10px,
+                    rgba(0, 0, 0, 0.3) 20px);
+        }
+
+        /* Log Terminal */
+        .log-terminal {
+            background: #000;
+            border: 1px solid var(--border-green);
+            height: 300px;
+            overflow-y: auto;
+            padding: 15px;
+            font-size: 0.85rem;
+        }
+
+        .log-terminal::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .log-terminal::-webkit-scrollbar-track {
+            background: #001100;
+        }
+
+        .log-terminal::-webkit-scrollbar-thumb {
+            background: var(--matrix-green);
+        }
+
+        .log-line {
+            margin-bottom: 3px;
+            animation: typeIn 0.3s ease;
+        }
+
+        @keyframes typeIn {
+            from {
+                opacity: 0;
+                transform: translateX(-10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .log-success {
+            color: var(--matrix-light-green);
+        }
+
+        .log-error {
+            color: #ff0040;
+        }
+
+        .log-warning {
+            color: #ffff00;
+        }
+
+        .log-info {
+            color: #00ffff;
+        }
+
+        /* Network List */
+        .network-list {
+            max-height: 250px;
+            overflow-y: auto;
+        }
+
+        .network-item {
+            background: rgba(0, 0, 0, 0.5);
+            border: 1px solid var(--border-green);
+            padding: 12px 15px;
+            margin-bottom: 8px;
             display: flex;
+            justify-content: space-between;
             align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .network-item:hover {
+            background: rgba(0, 255, 65, 0.1);
+            border-color: var(--matrix-green);
+            box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+        }
+
+        .network-ssid {
             font-weight: bold;
         }
 
-        .check-pass .check-icon {
-            background: rgba(0, 255, 136, 0.2);
-            color: var(--accent-green);
-            border: 1px solid var(--accent-green);
+        .network-details {
+            font-size: 0.75rem;
+            color: var(--text-dim);
+            margin-top: 3px;
         }
 
-        .check-fail .check-icon {
-            background: rgba(255, 0, 64, 0.2);
-            color: var(--accent-red);
-            border: 1px solid var(--accent-red);
-        }
-
-        /* Wordlist Results */
-        .wordlist-item {
+        .signal-meter {
             display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 12px 15px;
-            background: rgba(0, 0, 0, 0.2);
-            border-radius: 6px;
-            margin-bottom: 8px;
-            border-left: 3px solid transparent;
+            gap: 3px;
+            align-items: flex-end;
         }
 
-        .wordlist-safe {
-            border-left-color: var(--accent-green);
+        .signal-bar {
+            width: 6px;
+            background: var(--matrix-dark-green);
+            transition: background 0.3s;
         }
 
-        .wordlist-danger {
-            border-left-color: var(--accent-red);
-            background: rgba(255, 0, 64, 0.1);
+        .signal-bar.active {
+            background: var(--matrix-green);
+            box-shadow: 0 0 5px var(--matrix-green);
         }
 
-        .wordlist-name {
-            font-size: 0.85rem;
-        }
-
-        .wordlist-status {
-            font-size: 0.8rem;
-            font-weight: 600;
-        }
-
-        /* Warning Box */
-        .warning-box {
-            background: rgba(255, 0, 64, 0.15);
-            border: 1px solid var(--accent-red);
-            border-radius: 8px;
-            padding: 15px 20px;
-            margin-top: 15px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .warning-icon {
-            font-size: 2rem;
-            animation: shake 0.5s infinite;
-        }
-
-        @keyframes shake {
-            0%, 100% { transform: rotate(0); }
-            25% { transform: rotate(-5deg); }
-            75% { transform: rotate(5deg); }
-        }
-
-        .warning-text {
-            font-size: 0.9rem;
-            color: var(--accent-red);
-        }
-
-        /* Success Box */
-        .success-box {
-            background: rgba(0, 255, 136, 0.1);
-            border: 1px solid var(--accent-green);
-            border-radius: 8px;
-            padding: 15px 20px;
-            margin-top: 15px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .success-icon {
-            font-size: 1.5rem;
-        }
-
-        /* Empty State */
-        .empty-state {
+        /* Found Password */
+        .found-box {
+            background: rgba(0, 40, 0, 0.9);
+            border: 2px solid var(--matrix-green);
+            padding: 30px;
             text-align: center;
-            padding: 60px 20px;
-            color: var(--text-muted);
+            margin-top: 20px;
+            animation: foundPulse 1s infinite;
         }
 
-        .empty-icon {
-            font-size: 4rem;
-            margin-bottom: 20px;
-            opacity: 0.5;
+        @keyframes foundPulse {
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px var(--matrix-green);
+            }
+
+            50% {
+                box-shadow: 0 0 40px var(--matrix-green), 0 0 60px var(--matrix-green);
+            }
         }
 
-        /* Terminal Text Animation */
-        .terminal-text {
-            overflow: hidden;
-            border-right: 2px solid var(--accent-green);
-            animation: typing 3s steps(40) 1s forwards, blink 0.75s step-end infinite;
-            white-space: nowrap;
-            max-width: fit-content;
+        .found-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            text-shadow: var(--glow-green);
         }
 
-        @keyframes typing {
-            from { width: 0; }
-            to { width: 100%; }
+        .found-password {
+            font-size: 2rem;
+            letter-spacing: 5px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px 30px;
+            display: inline-block;
+            border: 1px solid var(--matrix-green);
         }
 
-        @keyframes blink {
-            50% { border-color: transparent; }
-        }
-
-        /* Loading Spinner */
+        /* Spinner */
         .spinner {
             width: 20px;
             height: 20px;
             border: 2px solid transparent;
-            border-top-color: currentColor;
+            border-top-color: var(--matrix-green);
             border-radius: 50%;
-            animation: spin 0.8s linear infinite;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            margin-right: 10px;
         }
 
         @keyframes spin {
-            to { transform: rotate(360deg); }
+            to {
+                transform: rotate(360deg);
+            }
         }
 
         /* Footer */
         .footer {
             text-align: center;
             padding: 30px;
-            color: var(--text-muted);
+            color: var(--text-dim);
             font-size: 0.8rem;
+            border-top: 1px solid var(--border-green);
             margin-top: 30px;
         }
 
-        .footer a {
-            color: var(--accent-cyan);
-            text-decoration: none;
+        /* Typing cursor */
+        .cursor {
+            display: inline-block;
+            width: 10px;
+            height: 1.2em;
+            background: var(--matrix-green);
+            animation: cursorBlink 1s step-end infinite;
+            margin-left: 5px;
         }
 
-        /* Animations */
-        .fade-in {
-            animation: fadeIn 0.5s ease;
-        }
+        @keyframes cursorBlink {
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
+            0%,
+            100% {
+                opacity: 1;
+            }
 
-        .slide-in {
-            animation: slideIn 0.3s ease;
-        }
-
-        @keyframes slideIn {
-            from { opacity: 0; transform: translateX(-20px); }
-            to { opacity: 1; transform: translateX(0); }
+            50% {
+                opacity: 0;
+            }
         }
     </style>
 </head>
+
 <body>
-    <!-- Matrix Rain Background -->
-    <canvas id="matrix-canvas"></canvas>
-    
-    <!-- Scanlines Overlay -->
-    <div class="scanlines"></div>
+    <!-- Matrix Background -->
+    <canvas id="matrix-bg"></canvas>
+
+    <!-- CRT Effect -->
+    <div class="crt-overlay"></div>
 
     <div class="container">
-        <!-- Header -->
+        <!-- ASCII Logo -->
         <header class="header">
-            <h1 class="logo">WIFI<span>SEC</span></h1>
-            <p class="subtitle">Professional Network Security Scanner</p>
+            <pre class="ascii-logo">
+██╗    ██╗██╗███████╗██╗    ███████╗███████╗ ██████╗
+██║    ██║██║██╔════╝██║    ██╔════╝██╔════╝██╔════╝
+██║ █╗ ██║██║█████╗  ██║    ███████╗█████╗  ██║     
+██║███╗██║██║██╔══╝  ██║    ╚════██║██╔══╝  ██║     
+╚███╔███╔╝██║██║     ██║    ███████║███████╗╚██████╗
+ ╚══╝╚══╝ ╚═╝╚═╝     ╚═╝    ╚══════╝╚══════╝ ╚═════╝
+            </pre>
+            <p class="subtitle">[ PENETRATION TESTING FRAMEWORK ]</p>
             <div class="status-bar">
                 <div class="status-item">
                     <div class="status-dot"></div>
-                    <span>System Online</span>
+                    <span>SYSTEM::ONLINE</span>
                 </div>
                 <div class="status-item">
-                    <span id="current-time">--:--:--</span>
+                    <span id="current-time">00:00:00</span>
                 </div>
                 <div class="status-item">
-                    <span id="wordlist-count">Loading...</span>
+                    <span id="wordlist-count">LOADING...</span>
                 </div>
             </div>
         </header>
 
-        <!-- Main Content -->
-        <main class="main-grid">
-            <!-- WiFi Scanner Panel -->
-            <section class="panel">
-                <div class="panel-header">
-                    <h2 class="panel-title">
-                        <span class="panel-title-icon">📡</span>
-                        Network Scanner
-                    </h2>
-                    <button class="btn btn-primary" id="btn-scan" onclick="scanNetworks()">
-                        <span>⚡</span> SCAN
+        <!-- Attack Panel -->
+        <div class="terminal-box full-width" style="margin-bottom: 20px;">
+            <div class="terminal-header">
+                <span class="terminal-title">🔓 BRUTEFORCE_ATTACK.exe</span>
+            </div>
+            <div class="terminal-body">
+                <select class="matrix-select" id="network-select">
+                    <option value="">> SELECT_TARGET_NETWORK...</option>
+                </select>
+
+                <div class="stats-grid">
+                    <div class="stat-box">
+                        <div class="stat-label">TARGET</div>
+                        <div class="stat-value" id="target-ssid">NULL</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">STATUS</div>
+                        <div class="stat-value" id="attack-status">IDLE</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">CURRENT_KEY</div>
+                        <div class="stat-value active" id="current-password">----</div>
+                    </div>
+                    <div class="stat-box">
+                        <div class="stat-label">ATTEMPTS</div>
+                        <div class="stat-value" id="tried-count">0</div>
+                    </div>
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress-label">
+                        <span>PROGRESS: <span id="progress-count">0 / 0</span></span>
+                        <span id="progress-percent">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <button class="matrix-btn" id="btn-attack" onclick="startAttack()">
+                    [ INITIATE_BRUTEFORCE ]
+                </button>
+                <button class="matrix-btn danger" id="btn-stop" onclick="stopAttack()" style="display: none;">
+                    [ TERMINATE_ATTACK ]
+                </button>
+
+                <div id="found-container"></div>
+            </div>
+        </div>
+
+        <!-- Bottom Grid -->
+        <div class="main-grid">
+            <!-- Network Scanner -->
+            <div class="terminal-box">
+                <div class="terminal-header">
+                    <span class="terminal-title">📡 NETWORK_SCANNER</span>
+                    <button class="matrix-btn" style="width: auto; padding: 8px 20px; margin: 0;"
+                        onclick="scanNetworks()">
+                        [ SCAN ]
                     </button>
                 </div>
-                <div class="panel-body" id="network-list">
-                    <div class="empty-state">
-                        <div class="empty-icon">📶</div>
-                        <p>Click <strong>SCAN</strong> to discover nearby networks</p>
-                        <p style="font-size: 0.8rem; margin-top: 10px;">Detecting all wireless access points in range...</p>
-                    </div>
-                </div>
-            </section>
-
-            <!-- Password Checker Panel -->
-            <section class="panel">
-                <div class="panel-header">
-                    <h2 class="panel-title">
-                        <span class="panel-title-icon">🔐</span>
-                        Password Analyzer
-                    </h2>
-                </div>
-                <div class="panel-body">
-                    <!-- Password Input -->
-                    <div class="input-group">
-                        <label class="input-label">Enter your WiFi password to analyze</label>
-                        <div class="input-wrapper">
-                            <input type="password" class="input-field" id="password-input" 
-                                   placeholder="Enter password..." autocomplete="off">
-                            <button class="btn-toggle-password" id="btn-toggle" onclick="togglePassword()">👁</button>
-                        </div>
-                    </div>
-                    
-                    <button class="btn btn-primary" style="width: 100%;" id="btn-check" onclick="checkPassword()">
-                        <span>🔍</span> ANALYZE PASSWORD
-                    </button>
-
-                    <!-- Results Container -->
-                    <div class="results-section" id="results-container">
-                        <div class="empty-state" style="padding: 40px;">
-                            <div class="empty-icon">🔑</div>
-                            <p>Enter a password and click <strong>ANALYZE</strong></p>
-                            <p style="font-size: 0.8rem; margin-top: 10px;">We'll check its strength against known wordlists</p>
+                <div class="terminal-body">
+                    <div class="network-list" id="network-list">
+                        <div style="text-align: center; color: var(--text-dim); padding: 40px;">
+                            > WAITING_FOR_SCAN...<span class="cursor"></span>
                         </div>
                     </div>
                 </div>
-            </section>
-        </main>
+            </div>
 
-        <!-- Footer -->
+            <!-- Attack Log -->
+            <div class="terminal-box">
+                <div class="terminal-header">
+                    <span class="terminal-title">💻 SYSTEM_LOG</span>
+                </div>
+                <div class="terminal-body" style="padding: 0;">
+                    <div class="log-terminal" id="terminal-log">
+                        <div class="log-line log-info">[SYS] WIFISEC v3.0 MATRIX EDITION</div>
+                        <div class="log-line">[SYS] Loading password database...</div>
+                        <div class="log-line log-success">[OK] System initialized</div>
+                        <div class="log-line">[SYS] Awaiting target selection...<span class="cursor"></span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
         <footer class="footer">
-            <p>⚠️ For authorized security testing only. Do not use on networks without permission.</p>
-            <p style="margin-top: 10px;">WiFiSec v1.0 | <a href="#">Documentation</a></p>
+            ⚠️ AUTHORIZED SECURITY TESTING ONLY ⚠️
+            <br>WIFISEC v3.0 | MATRIX EDITION | USE RESPONSIBLY
         </footer>
     </div>
 
     <script>
-        // Matrix Rain Effect
-        const canvas = document.getElementById('matrix-canvas');
+        // Matrix Rain Background
+        const canvas = document.getElementById('matrix-bg');
         const ctx = canvas.getContext('2d');
 
-        function resizeCanvas() {
+        function initMatrix() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         }
-        resizeCanvas();
-        window.addEventListener('resize', resizeCanvas);
+        initMatrix();
+        window.addEventListener('resize', initMatrix);
 
-        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*()';
-        const fontSize = 14;
-        const columns = canvas.width / fontSize;
-        const drops = Array(Math.floor(columns)).fill(1);
+        const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const fontSize = 16;
+        let columns = canvas.width / fontSize;
+        let drops = [];
+
+        for (let i = 0; i < columns; i++) {
+            drops[i] = Math.random() * -100;
+        }
 
         function drawMatrix() {
-            ctx.fillStyle = 'rgba(10, 10, 15, 0.05)';
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
-            
-            ctx.fillStyle = '#00ff88';
-            ctx.font = fontSize + 'px JetBrains Mono';
+
+            ctx.fillStyle = '#00ff41';
+            ctx.font = fontSize + 'px monospace';
 
             for (let i = 0; i < drops.length; i++) {
-                const text = chars[Math.floor(Math.random() * chars.length)];
-                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                const char = chars[Math.floor(Math.random() * chars.length)];
+                const x = i * fontSize;
+                const y = drops[i] * fontSize;
 
-                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) {
+                // Brighter for the head
+                if (Math.random() > 0.95) {
+                    ctx.fillStyle = '#ffffff';
+                } else {
+                    ctx.fillStyle = `rgba(0, 255, 65, ${Math.random() * 0.5 + 0.5})`;
+                }
+
+                ctx.fillText(char, x, y);
+
+                if (y > canvas.height && Math.random() > 0.975) {
                     drops[i] = 0;
                 }
                 drops[i]++;
             }
         }
 
-        setInterval(drawMatrix, 50);
+        setInterval(drawMatrix, 33);
 
-        // Update Clock
+        // Clock
         function updateClock() {
-            const now = new Date();
-            const time = now.toLocaleTimeString('en-US', { hour12: false });
-            document.getElementById('current-time').textContent = time;
+            document.getElementById('current-time').textContent =
+                new Date().toLocaleTimeString('en-US', { hour12: false });
         }
         setInterval(updateClock, 1000);
         updateClock();
 
-        // Load Wordlist Info
+        // Load wordlist info
         async function loadWordlistInfo() {
             try {
-                const response = await fetch('/api/wordlists');
-                const data = await response.json();
+                const res = await fetch('/api/wordlists');
+                const data = await res.json();
                 if (data.success) {
-                    document.getElementById('wordlist-count').textContent = 
-                        `${data.total.toLocaleString()} passwords in database`;
+                    document.getElementById('wordlist-count').textContent =
+                        `DB::${data.total.toLocaleString()}_KEYS`;
                 }
-            } catch (error) {
-                console.error('Failed to load wordlist info:', error);
-            }
+            } catch (e) { }
         }
         loadWordlistInfo();
 
-        // Toggle Password Visibility
-        let passwordVisible = false;
-        function togglePassword() {
-            passwordVisible = !passwordVisible;
-            const input = document.getElementById('password-input');
-            const btn = document.getElementById('btn-toggle');
-            input.type = passwordVisible ? 'text' : 'password';
-            btn.textContent = passwordVisible ? '🙈' : '👁';
-        }
-
         // Scan Networks
         async function scanNetworks() {
-            const btn = document.getElementById('btn-scan');
-            const container = document.getElementById('network-list');
-            
-            btn.disabled = true;
-            btn.innerHTML = '<div class="spinner"></div> SCANNING...';
-            container.innerHTML = `
-                <div class="empty-state">
-                    <div class="spinner" style="width: 40px; height: 40px; margin: 0 auto 20px; border-width: 3px;"></div>
-                    <p>Scanning for networks...</p>
-                    <p style="font-size: 0.8rem; margin-top: 10px; color: var(--accent-green);">
-                        Probing wireless frequencies...
-                    </p>
-                </div>
-            `;
+            const list = document.getElementById('network-list');
+            const select = document.getElementById('network-select');
+
+            list.innerHTML = '<div style="text-align: center; padding: 40px;"><div class="spinner"></div> SCANNING...</div>';
+            addLog('[SYS] Initiating network scan...', 'info');
 
             try {
-                const response = await fetch('/api/scan');
-                const data = await response.json();
+                const res = await fetch('/api/scan');
+                const data = await res.json();
 
                 if (data.success && data.networks.length > 0) {
-                    container.innerHTML = `<div class="network-list fade-in">${
-                        data.networks.map(net => createNetworkCard(net)).join('')
-                    }</div>`;
+                    select.innerHTML = '<option value="">> SELECT_TARGET...</option>';
+                    list.innerHTML = '';
+
+                    data.networks.forEach(net => {
+                        // Dropdown
+                        const opt = document.createElement('option');
+                        opt.value = net.ssid;
+                        opt.textContent = `${net.ssid} [${net.signal}%]`;
+                        select.appendChild(opt);
+
+                        // List
+                        const signalBars = Math.ceil(net.signal / 25);
+                        list.innerHTML += `
+                            <div class="network-item" onclick="selectNetwork('${net.ssid}')">
+                                <div>
+                                    <div class="network-ssid">${net.ssid}</div>
+                                    <div class="network-details">${net.auth} | CH:${net.channel || 'N/A'}</div>
+                                </div>
+                                <div class="signal-meter">
+                                    ${[1, 2, 3, 4].map(i => `<div class="signal-bar ${i <= signalBars ? 'active' : ''}" style="height: ${i * 6}px;"></div>`).join('')}
+                                </div>
+                            </div>
+                        `;
+                    });
+
+                    addLog(`[OK] Found ${data.networks.length} networks`, 'success');
                 } else {
-                    container.innerHTML = `
-                        <div class="empty-state">
-                            <div class="empty-icon">❌</div>
-                            <p>No networks found</p>
-                            <p style="font-size: 0.8rem; margin-top: 10px;">
-                                Make sure your WiFi adapter is enabled
-                            </p>
-                        </div>
-                    `;
+                    list.innerHTML = '<div style="text-align: center; color: #ff0040; padding: 40px;">NO_NETWORKS_FOUND</div>';
+                    addLog('[ERR] No networks detected', 'error');
                 }
-            } catch (error) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon" style="color: var(--accent-red);">⚠️</div>
-                        <p style="color: var(--accent-red);">Scan failed</p>
-                        <p style="font-size: 0.8rem; margin-top: 10px;">${error.message}</p>
-                    </div>
-                `;
+            } catch (e) {
+                list.innerHTML = '<div style="text-align: center; color: #ff0040; padding: 40px;">SCAN_FAILED</div>';
+                addLog('[ERR] Scan failed: ' + e.message, 'error');
             }
-
-            btn.disabled = false;
-            btn.innerHTML = '<span>⚡</span> SCAN';
         }
 
-        function createNetworkCard(network) {
-            const signal = network.signal;
-            let signalClass = 'signal-poor';
-            let signalColor = 'var(--accent-red)';
-            
-            if (signal >= 80) { signalClass = 'signal-excellent'; signalColor = 'var(--accent-green)'; }
-            else if (signal >= 60) { signalClass = 'signal-good'; signalColor = 'var(--accent-cyan)'; }
-            else if (signal >= 40) { signalClass = 'signal-medium'; signalColor = 'var(--accent-yellow)'; }
-            else if (signal >= 20) { signalClass = 'signal-weak'; signalColor = 'var(--accent-orange)'; }
-
-            return `
-                <div class="network-card slide-in">
-                    <div class="network-info">
-                        <div class="network-ssid">
-                            📶 ${network.ssid}
-                        </div>
-                        <div class="network-details">
-                            <span>🔐 ${network.auth}</span>
-                            <span>📻 CH ${network.channel}</span>
-                        </div>
-                    </div>
-                    <div class="network-signal">
-                        <div class="signal-value ${signalClass}">${signal}%</div>
-                        <div class="signal-bar">
-                            <div class="signal-fill" style="width: ${signal}%; background: ${signalColor};"></div>
-                        </div>
-                    </div>
-                </div>
-            `;
+        function selectNetwork(ssid) {
+            document.getElementById('network-select').value = ssid;
+            document.getElementById('target-ssid').textContent = ssid.substring(0, 15) + (ssid.length > 15 ? '...' : '');
+            addLog(`[SYS] Target acquired: ${ssid}`, 'info');
         }
 
-        // Check Password
-        async function checkPassword() {
-            const password = document.getElementById('password-input').value;
-            const container = document.getElementById('results-container');
-            const btn = document.getElementById('btn-check');
+        // Attack
+        let statusInterval = null;
 
-            if (!password) {
-                alert('Please enter a password to analyze');
+        async function startAttack() {
+            const ssid = document.getElementById('network-select').value;
+            if (!ssid) {
+                addLog('[ERR] No target selected!', 'error');
                 return;
             }
 
+            const btn = document.getElementById('btn-attack');
+            const stopBtn = document.getElementById('btn-stop');
             btn.disabled = true;
-            btn.innerHTML = '<div class="spinner"></div> ANALYZING...';
-            container.innerHTML = `
-                <div class="empty-state" style="padding: 30px;">
-                    <div class="spinner" style="width: 40px; height: 40px; margin: 0 auto 20px; border-width: 3px;"></div>
-                    <p>Analyzing password strength...</p>
-                    <p style="font-size: 0.8rem; margin-top: 10px; color: var(--accent-cyan);">
-                        Checking against wordlists...
-                    </p>
-                </div>
-            `;
+            btn.innerHTML = '<span class="spinner"></span> INITIALIZING...';
+            stopBtn.style.display = 'block';
 
             try {
-                const response = await fetch('/api/check', {
+                const res = await fetch('/api/bruteforce/start', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
-                    body: JSON.stringify({ password })
+                    body: JSON.stringify({ ssid })
                 });
-                const data = await response.json();
+                const data = await res.json();
 
                 if (data.success) {
-                    container.innerHTML = createResults(data);
+                    addLog(`[ATK] Bruteforce initiated on: ${ssid}`, 'success');
+                    document.getElementById('attack-status').textContent = 'RUNNING';
+                    document.getElementById('attack-status').classList.add('active');
+                    startPolling();
+                } else {
+                    addLog('[ERR] ' + data.error, 'error');
+                    resetUI();
                 }
-            } catch (error) {
-                container.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon" style="color: var(--accent-red);">⚠️</div>
-                        <p style="color: var(--accent-red);">Analysis failed</p>
-                        <p style="font-size: 0.8rem; margin-top: 10px;">${error.message}</p>
-                    </div>
-                `;
+            } catch (e) {
+                addLog('[ERR] ' + e.message, 'error');
+                resetUI();
             }
-
-            btn.disabled = false;
-            btn.innerHTML = '<span>🔍</span> ANALYZE PASSWORD';
         }
 
-        function createResults(data) {
-            const { strength, wordlist } = data;
-            const { rating, checks, score, max_score, crack_time, entropy, length } = strength;
-            
-            const scorePercent = (score / max_score) * 100;
+        async function stopAttack() {
+            await fetch('/api/bruteforce/stop', { method: 'POST' });
+            addLog('[SYS] Attack terminated by user', 'warning');
+        }
 
-            return `
-                <div class="fade-in">
-                    <!-- Overall Rating -->
-                    <div class="result-card">
-                        <div class="result-header">
-                            <span class="result-title">Security Rating</span>
-                            <span class="rating-badge rating-${rating.level}">${rating.text}</span>
-                        </div>
-                        <div class="strength-bar">
-                            <div class="strength-fill" style="width: ${scorePercent}%; background: ${rating.color};"></div>
-                        </div>
-                        <div class="stats-grid">
-                            <div class="stat-item">
-                                <div class="stat-value">${length}</div>
-                                <div class="stat-label">Characters</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value">${entropy}</div>
-                                <div class="stat-label">Entropy Bits</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value">${score.toFixed(1)}</div>
-                                <div class="stat-label">Score</div>
-                            </div>
-                            <div class="stat-item">
-                                <div class="stat-value" style="font-size: 0.9rem;">${crack_time}</div>
-                                <div class="stat-label">Crack Time</div>
-                            </div>
-                        </div>
-                    </div>
+        function startPolling() {
+            statusInterval = setInterval(updateStatus, 300);
+        }
 
-                    <!-- Security Checks -->
-                    <div class="result-card">
-                        <div class="result-header">
-                            <span class="result-title">Security Checks</span>
-                        </div>
-                        <div class="checks-list">
-                            ${createCheckItem('8+ characters', checks.length_8)}
-                            ${createCheckItem('12+ characters', checks.length_12)}
-                            ${createCheckItem('Uppercase letters (A-Z)', checks.has_upper)}
-                            ${createCheckItem('Lowercase letters (a-z)', checks.has_lower)}
-                            ${createCheckItem('Numbers (0-9)', checks.has_digit)}
-                            ${createCheckItem('Special characters (!@#$...)', checks.has_special)}
-                            ${createCheckItem('No repeated characters', checks.no_repeats)}
-                            ${createCheckItem('No sequential patterns', checks.no_sequences)}
-                        </div>
-                    </div>
+        async function updateStatus() {
+            try {
+                const res = await fetch('/api/bruteforce/status');
+                const data = await res.json();
 
-                    <!-- Wordlist Check -->
-                    <div class="result-card">
-                        <div class="result-header">
-                            <span class="result-title">Wordlist Analysis</span>
-                            <span style="font-size: 0.75rem; color: var(--text-muted);">
-                                ${wordlist.total_checked.toLocaleString()} passwords checked
-                            </span>
-                        </div>
-                        ${wordlist.results.map(w => `
-                            <div class="wordlist-item ${w.found ? 'wordlist-danger' : 'wordlist-safe'}">
-                                <span class="wordlist-name">📁 ${w.name} (${w.count.toLocaleString()})</span>
-                                <span class="wordlist-status" style="color: ${w.found ? 'var(--accent-red)' : 'var(--accent-green)'};">
-                                    ${w.found ? '⚠️ FOUND' : '✅ SAFE'}
-                                </span>
-                            </div>
-                        `).join('')}
-                        
-                        ${wordlist.found ? `
-                            <div class="warning-box">
-                                <span class="warning-icon">🚨</span>
-                                <div class="warning-text">
-                                    <strong>CRITICAL WARNING!</strong><br>
-                                    This password exists in common wordlists and can be cracked in seconds!
-                                </div>
-                            </div>
-                        ` : `
-                            <div class="success-box">
-                                <span class="success-icon">✅</span>
-                                <div style="color: var(--accent-green);">
-                                    Password not found in any wordlist database
-                                </div>
-                            </div>
-                        `}
-                    </div>
+                if (data.success) {
+                    document.getElementById('current-password').textContent = data.current || '----';
+                    document.getElementById('tried-count').textContent = data.tried || 0;
+
+                    const pct = data.total > 0 ? Math.round((data.tried / data.total) * 100) : 0;
+                    document.getElementById('progress-count').textContent = `${data.tried} / ${data.total}`;
+                    document.getElementById('progress-percent').textContent = pct + '%';
+                    document.getElementById('progress-fill').style.width = pct + '%';
+
+                    if (data.log && data.log.length > 0) {
+                        const last = data.log[data.log.length - 1];
+                        if (window.lastLog !== last) {
+                            window.lastLog = last;
+                            addLog(last);
+                        }
+                    }
+
+                    if (data.found) {
+                        showFound(data.password);
+                        stopPolling();
+                    } else if (!data.running) {
+                        stopPolling();
+                    }
+                }
+            } catch (e) { }
+        }
+
+        function stopPolling() {
+            if (statusInterval) {
+                clearInterval(statusInterval);
+                statusInterval = null;
+            }
+            resetUI();
+        }
+
+        function resetUI() {
+            document.getElementById('btn-attack').disabled = false;
+            document.getElementById('btn-attack').innerHTML = '[ INITIATE_BRUTEFORCE ]';
+            document.getElementById('btn-stop').style.display = 'none';
+            document.getElementById('attack-status').textContent = 'IDLE';
+            document.getElementById('attack-status').classList.remove('active');
+        }
+
+        function showFound(password) {
+            document.getElementById('found-container').innerHTML = `
+                <div class="found-box">
+                    <div class="found-title">✓ ACCESS_GRANTED ✓</div>
+                    <div class="found-password">${password}</div>
                 </div>
             `;
+            document.getElementById('attack-status').textContent = 'CRACKED';
+            addLog(`[SUCCESS] PASSWORD_CRACKED: ${password}`, 'success');
         }
 
-        function createCheckItem(label, passed) {
-            return `
-                <div class="check-item ${passed ? 'check-pass' : 'check-fail'}">
-                    <span class="check-icon">${passed ? '✓' : '✗'}</span>
-                    <span>${label}</span>
-                </div>
-            `;
+        function addLog(msg, type = '') {
+            const log = document.getElementById('terminal-log');
+            const line = document.createElement('div');
+            line.className = 'log-line';
+            if (msg.includes('[OK]') || msg.includes('[SUCCESS]') || msg.includes('[+]')) line.className += ' log-success';
+            else if (msg.includes('[ERR]') || msg.includes('[-]')) line.className += ' log-error';
+            else if (msg.includes('[WARN]') || msg.includes('[!]')) line.className += ' log-warning';
+            else if (msg.includes('[SYS]') || msg.includes('[*]') || msg.includes('[ATK]')) line.className += ' log-info';
+            line.textContent = msg;
+            log.appendChild(line);
+            log.scrollTop = log.scrollHeight;
         }
 
-        // Enter key to submit
-        document.getElementById('password-input').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') checkPassword();
-        });
+        // Auto scan on load
+        setTimeout(scanNetworks, 1500);
     </script>
 </body>
+
 </html>
