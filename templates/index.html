@@ -4,23 +4,31 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>WIFISEC | Matrix Edition - WiFi Penetration Testing</title>
+    <title>WIFISEC | Cyberpunk Edition - WiFi Penetration Testing</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link
-        href="https://fonts.googleapis.com/css2?family=Share+Tech+Mono&family=Orbitron:wght@400;500;600;700;800;900&display=swap"
+        href="https://fonts.googleapis.com/css2?family=Rajdhani:wght@400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap"
         rel="stylesheet">
     <style>
         :root {
-            --matrix-green: #00ff41;
-            --matrix-dark-green: #003b00;
-            --matrix-light-green: #39ff14;
-            --bg-black: #000000;
-            --bg-dark: #0a0a0a;
-            --text-green: #00ff41;
-            --text-dim: #00802b;
-            --glow-green: 0 0 10px #00ff41, 0 0 20px #00ff41, 0 0 30px #00ff41;
-            --border-green: rgba(0, 255, 65, 0.3);
+            --bg-dark: #0a0e17;
+            --bg-card: rgba(15, 23, 42, 0.9);
+            --bg-darker: #050810;
+
+            --cyan: #00f0ff;
+            --cyan-dim: #007a82;
+            --magenta: #ff00aa;
+            --magenta-dim: #820057;
+            --orange: #ff6b00;
+            --red: #ff2d55;
+            --green: #00ff88;
+            --yellow: #ffd600;
+            --purple: #a855f7;
+
+            --text-primary: #e8eaed;
+            --text-dim: #8892a7;
+            --border-color: rgba(0, 240, 255, 0.2);
         }
 
         * {
@@ -30,15 +38,15 @@
         }
 
         body {
-            font-family: 'Share Tech Mono', monospace;
-            background: var(--bg-black);
-            color: var(--text-green);
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--bg-dark);
+            color: var(--text-primary);
             min-height: 100vh;
             overflow-x: hidden;
         }
 
-        /* Matrix Canvas - Full Screen */
-        #matrix-bg {
+        /* Animated Background */
+        #bg-canvas {
             position: fixed;
             top: 0;
             left: 0;
@@ -47,119 +55,19 @@
             z-index: 0;
         }
 
-        /* CRT Scanlines */
-        .crt-overlay {
+        /* Grid Overlay */
+        .grid-overlay {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
+            background:
+                linear-gradient(90deg, rgba(0, 240, 255, 0.03) 1px, transparent 1px),
+                linear-gradient(rgba(0, 240, 255, 0.03) 1px, transparent 1px);
+            background-size: 50px 50px;
             pointer-events: none;
             z-index: 1;
-            background:
-                repeating-linear-gradient(0deg,
-                    rgba(0, 0, 0, 0.15) 0px,
-                    rgba(0, 0, 0, 0.15) 1px,
-                    transparent 1px,
-                    transparent 2px);
-        }
-
-        /* Flicker Effect */
-        .crt-overlay::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 255, 65, 0.02);
-            animation: flicker 0.15s infinite;
-        }
-
-        @keyframes flicker {
-            0% {
-                opacity: 0.27861;
-            }
-
-            5% {
-                opacity: 0.34769;
-            }
-
-            10% {
-                opacity: 0.23604;
-            }
-
-            15% {
-                opacity: 0.90626;
-            }
-
-            20% {
-                opacity: 0.18128;
-            }
-
-            25% {
-                opacity: 0.83891;
-            }
-
-            30% {
-                opacity: 0.65583;
-            }
-
-            35% {
-                opacity: 0.67807;
-            }
-
-            40% {
-                opacity: 0.26559;
-            }
-
-            45% {
-                opacity: 0.84693;
-            }
-
-            50% {
-                opacity: 0.96019;
-            }
-
-            55% {
-                opacity: 0.08594;
-            }
-
-            60% {
-                opacity: 0.20313;
-            }
-
-            65% {
-                opacity: 0.71988;
-            }
-
-            70% {
-                opacity: 0.53455;
-            }
-
-            75% {
-                opacity: 0.37288;
-            }
-
-            80% {
-                opacity: 0.71428;
-            }
-
-            85% {
-                opacity: 0.70419;
-            }
-
-            90% {
-                opacity: 0.7003;
-            }
-
-            95% {
-                opacity: 0.36108;
-            }
-
-            100% {
-                opacity: 0.24387;
-            }
         }
 
         .container {
@@ -173,28 +81,34 @@
         /* Header */
         .header {
             text-align: center;
-            padding: 40px 20px;
-            margin-bottom: 30px;
+            padding: 30px 20px;
+            margin-bottom: 25px;
         }
 
-        .ascii-logo {
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 0.6rem;
-            line-height: 1.1;
-            white-space: pre;
-            color: var(--matrix-green);
-            text-shadow: var(--glow-green);
-            animation: textGlow 2s infinite alternate;
-            margin-bottom: 20px;
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--cyan), var(--magenta), var(--orange));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            letter-spacing: 8px;
+            text-shadow: 0 0 30px rgba(0, 240, 255, 0.5);
         }
 
-        @keyframes textGlow {
+        .logo-icon {
+            display: inline-block;
+            animation: rotate 10s linear infinite;
+        }
+
+        @keyframes rotate {
             from {
-                text-shadow: 0 0 5px #00ff41, 0 0 10px #00ff41;
+                transform: rotate(0deg);
             }
 
             to {
-                text-shadow: 0 0 10px #00ff41, 0 0 20px #00ff41, 0 0 30px #00ff41;
+                transform: rotate(360deg);
             }
         }
 
@@ -203,87 +117,101 @@
             font-size: 1rem;
             letter-spacing: 5px;
             text-transform: uppercase;
+            margin-top: 10px;
         }
 
         .status-bar {
             display: flex;
             justify-content: center;
-            gap: 40px;
-            margin-top: 25px;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 20px;
             font-size: 0.9rem;
         }
 
         .status-item {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: 8px;
         }
 
         .status-dot {
-            width: 12px;
-            height: 12px;
-            background: var(--matrix-green);
-            box-shadow: 0 0 10px var(--matrix-green), 0 0 20px var(--matrix-green);
-            animation: blink 1s infinite;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--cyan);
+            box-shadow: 0 0 10px var(--cyan);
+            animation: pulse 2s infinite;
         }
 
-        @keyframes blink {
+        .status-dot.attack {
+            background: var(--red);
+            box-shadow: 0 0 10px var(--red);
+        }
+
+        @keyframes pulse {
 
             0%,
             100% {
                 opacity: 1;
+                transform: scale(1);
             }
 
             50% {
-                opacity: 0.3;
+                opacity: 0.5;
+                transform: scale(0.8);
             }
         }
 
-        /* Terminal Box Style */
-        .terminal-box {
-            background: rgba(0, 20, 0, 0.8);
-            border: 1px solid var(--border-green);
-            border-radius: 0;
-            position: relative;
+        /* Cards */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
             overflow: hidden;
+            backdrop-filter: blur(10px);
         }
 
-        .terminal-box::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            height: 25px;
-            background: linear-gradient(90deg,
-                    var(--matrix-dark-green) 0%,
-                    var(--matrix-green) 50%,
-                    var(--matrix-dark-green) 100%);
-            opacity: 0.3;
+        .card-header {
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: rgba(0, 0, 0, 0.3);
         }
 
-        .terminal-header {
-            background: rgba(0, 40, 0, 0.9);
-            padding: 8px 15px;
-            border-bottom: 1px solid var(--border-green);
+        .card-header.attack {
+            border-bottom-color: rgba(255, 45, 85, 0.3);
+            background: linear-gradient(90deg, rgba(255, 45, 85, 0.1), transparent);
+        }
+
+        .card-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
             display: flex;
             align-items: center;
-            gap: 15px;
+            gap: 10px;
         }
 
-        .terminal-title {
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 0.9rem;
-            color: var(--matrix-green);
-            text-transform: uppercase;
-            letter-spacing: 2px;
+        .card-title.cyan {
+            color: var(--cyan);
         }
 
-        .terminal-body {
+        .card-title.red {
+            color: var(--red);
+        }
+
+        .card-title.purple {
+            color: var(--purple);
+        }
+
+        .card-body {
             padding: 20px;
         }
 
-        /* Main Grid */
+        /* Grid Layout */
         .main-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -295,107 +223,64 @@
             grid-column: 1 / -1;
         }
 
-        @media (max-width: 1000px) {
+        @media (max-width: 900px) {
             .main-grid {
                 grid-template-columns: 1fr;
             }
         }
 
-        /* Inputs */
-        .matrix-select {
+        /* Select */
+        .cyber-select {
             width: 100%;
-            padding: 12px 15px;
-            background: rgba(0, 0, 0, 0.8);
-            border: 1px solid var(--matrix-green);
-            color: var(--matrix-green);
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 1rem;
+            padding: 14px 18px;
+            background: var(--bg-darker);
+            border: 2px solid var(--cyan-dim);
+            border-radius: 8px;
+            color: var(--cyan);
+            font-family: 'Rajdhani', sans-serif;
+            font-size: 1.1rem;
+            font-weight: 600;
             cursor: pointer;
-            outline: none;
-        }
-
-        .matrix-select:focus {
-            box-shadow: 0 0 15px rgba(0, 255, 65, 0.5);
-        }
-
-        .matrix-select option {
-            background: #000;
-            color: var(--matrix-green);
-        }
-
-        /* Matrix Button */
-        .matrix-btn {
-            font-family: 'Share Tech Mono', monospace;
-            font-size: 1rem;
-            padding: 15px 30px;
-            background: transparent;
-            border: 2px solid var(--matrix-green);
-            color: var(--matrix-green);
-            cursor: pointer;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            position: relative;
-            overflow: hidden;
             transition: all 0.3s;
-            width: 100%;
-            margin-top: 15px;
         }
 
-        .matrix-btn::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: -100%;
-            width: 100%;
-            height: 100%;
-            background: linear-gradient(90deg, transparent, rgba(0, 255, 65, 0.3), transparent);
-            transition: left 0.5s;
+        .cyber-select:focus {
+            outline: none;
+            border-color: var(--cyan);
+            box-shadow: 0 0 20px rgba(0, 240, 255, 0.3);
         }
 
-        .matrix-btn:hover::before {
-            left: 100%;
+        .cyber-select option {
+            background: var(--bg-dark);
+            color: var(--text-primary);
         }
 
-        .matrix-btn:hover {
-            background: rgba(0, 255, 65, 0.1);
-            box-shadow: 0 0 30px rgba(0, 255, 65, 0.5), inset 0 0 30px rgba(0, 255, 65, 0.1);
-            text-shadow: 0 0 10px var(--matrix-green);
-        }
-
-        .matrix-btn:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-
-        .matrix-btn.danger {
-            border-color: #ff0040;
-            color: #ff0040;
-        }
-
-        .matrix-btn.danger:hover {
-            background: rgba(255, 0, 64, 0.1);
-            box-shadow: 0 0 30px rgba(255, 0, 64, 0.5);
-        }
-
-        /* Stats Display */
+        /* Stats Grid */
         .stats-grid {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
+            gap: 12px;
             margin: 20px 0;
         }
 
-        @media (max-width: 800px) {
+        @media (max-width: 600px) {
             .stats-grid {
                 grid-template-columns: repeat(2, 1fr);
             }
         }
 
-        .stat-box {
-            background: rgba(0, 0, 0, 0.6);
-            border: 1px solid var(--border-green);
+        .stat-card {
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
             padding: 15px;
             text-align: center;
+            transition: all 0.3s;
+        }
+
+        .stat-card:hover {
+            border-color: var(--cyan);
+            transform: translateY(-2px);
         }
 
         .stat-label {
@@ -408,30 +293,28 @@
 
         .stat-value {
             font-family: 'Orbitron', sans-serif;
-            font-size: 1.2rem;
-            color: var(--matrix-green);
-            text-shadow: 0 0 10px var(--matrix-green);
+            font-size: 1.1rem;
+            font-weight: 700;
         }
 
-        .stat-value.active {
-            color: var(--matrix-light-green);
-            animation: valuePulse 1s infinite;
+        .stat-value.cyan {
+            color: var(--cyan);
         }
 
-        @keyframes valuePulse {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0.7;
-            }
+        .stat-value.orange {
+            color: var(--orange);
         }
 
-        /* Progress */
-        .progress-container {
+        .stat-value.purple {
+            color: var(--purple);
+        }
+
+        .stat-value.yellow {
+            color: var(--yellow);
+        }
+
+        /* Progress Bar */
+        .progress-wrap {
             margin: 20px 0;
         }
 
@@ -439,94 +322,186 @@
             display: flex;
             justify-content: space-between;
             margin-bottom: 8px;
-            font-size: 0.85rem;
+            font-size: 0.9rem;
+            color: var(--text-dim);
         }
 
         .progress-bar {
-            height: 20px;
-            background: rgba(0, 40, 0, 0.8);
-            border: 1px solid var(--border-green);
-            position: relative;
+            height: 24px;
+            background: var(--bg-darker);
+            border-radius: 12px;
             overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .progress-fill {
             height: 100%;
-            background: linear-gradient(90deg,
-                    var(--matrix-dark-green),
-                    var(--matrix-green),
-                    var(--matrix-light-green));
-            box-shadow: 0 0 20px var(--matrix-green);
+            background: linear-gradient(90deg, var(--orange), var(--magenta), var(--cyan));
+            border-radius: 12px;
             transition: width 0.3s;
+            position: relative;
         }
 
-        .progress-bar::after {
+        .progress-fill::after {
             content: '';
             position: absolute;
             top: 0;
             left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            animation: shimmer 2s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* Buttons */
+        .btn {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 16px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
             width: 100%;
             height: 100%;
-            background: repeating-linear-gradient(90deg,
-                    transparent 0px,
-                    transparent 10px,
-                    rgba(0, 0, 0, 0.3) 10px,
-                    rgba(0, 0, 0, 0.3) 20px);
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            transition: left 0.5s;
         }
 
-        /* Log Terminal */
-        .log-terminal {
+        .btn:hover::before {
+            left: 100%;
+        }
+
+        .btn-attack {
+            background: linear-gradient(135deg, var(--red), var(--magenta));
+            color: white;
+            box-shadow: 0 4px 20px rgba(255, 45, 85, 0.4);
+        }
+
+        .btn-attack:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 30px rgba(255, 45, 85, 0.6);
+        }
+
+        .btn-attack:disabled {
+            background: #333;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .btn-stop {
+            background: linear-gradient(135deg, #666, #444);
+            color: white;
+            margin-top: 12px;
+        }
+
+        .btn-scan {
+            background: linear-gradient(135deg, var(--cyan), #00a8b3);
+            color: var(--bg-dark);
+            padding: 10px 20px;
+            width: auto;
+        }
+
+        .btn-scan:hover {
+            box-shadow: 0 4px 20px rgba(0, 240, 255, 0.4);
+        }
+
+        /* Terminal */
+        .terminal {
             background: #000;
-            border: 1px solid var(--border-green);
-            height: 300px;
-            overflow-y: auto;
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+
+        .terminal-header {
+            background: #1a1a1a;
+            padding: 10px 15px;
+            display: flex;
+            gap: 8px;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot.red {
+            background: #ff5f56;
+        }
+
+        .terminal-dot.yellow {
+            background: #ffbd2e;
+        }
+
+        .terminal-dot.green {
+            background: #27ca40;
+        }
+
+        .terminal-body {
             padding: 15px;
+            height: 250px;
+            overflow-y: auto;
+            font-family: 'Consolas', monospace;
             font-size: 0.85rem;
+            color: #aaa;
         }
 
-        .log-terminal::-webkit-scrollbar {
-            width: 8px;
+        .terminal-body::-webkit-scrollbar {
+            width: 6px;
         }
 
-        .log-terminal::-webkit-scrollbar-track {
-            background: #001100;
-        }
-
-        .log-terminal::-webkit-scrollbar-thumb {
-            background: var(--matrix-green);
+        .terminal-body::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 3px;
         }
 
         .log-line {
-            margin-bottom: 3px;
-            animation: typeIn 0.3s ease;
-        }
-
-        @keyframes typeIn {
-            from {
-                opacity: 0;
-                transform: translateX(-10px);
-            }
-
-            to {
-                opacity: 1;
-                transform: translateX(0);
-            }
+            margin-bottom: 4px;
         }
 
         .log-success {
-            color: var(--matrix-light-green);
+            color: var(--green);
         }
 
         .log-error {
-            color: #ff0040;
+            color: var(--red);
         }
 
         .log-warning {
-            color: #ffff00;
+            color: var(--yellow);
         }
 
         .log-info {
-            color: #00ffff;
+            color: var(--cyan);
         }
 
         /* Network List */
@@ -536,98 +511,103 @@
         }
 
         .network-item {
-            background: rgba(0, 0, 0, 0.5);
-            border: 1px solid var(--border-green);
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 8px;
             padding: 12px 15px;
             margin-bottom: 8px;
             display: flex;
             justify-content: space-between;
             align-items: center;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.3s;
         }
 
         .network-item:hover {
-            background: rgba(0, 255, 65, 0.1);
-            border-color: var(--matrix-green);
-            box-shadow: 0 0 15px rgba(0, 255, 65, 0.3);
+            border-color: var(--cyan);
+            background: rgba(0, 240, 255, 0.05);
         }
 
         .network-ssid {
-            font-weight: bold;
+            font-weight: 700;
+            font-size: 1rem;
         }
 
-        .network-details {
+        .network-meta {
             font-size: 0.75rem;
             color: var(--text-dim);
             margin-top: 3px;
         }
 
-        .signal-meter {
-            display: flex;
-            gap: 3px;
-            align-items: flex-end;
+        .signal-value {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            font-weight: 700;
         }
 
-        .signal-bar {
-            width: 6px;
-            background: var(--matrix-dark-green);
-            transition: background 0.3s;
+        .signal-high {
+            color: var(--green);
         }
 
-        .signal-bar.active {
-            background: var(--matrix-green);
-            box-shadow: 0 0 5px var(--matrix-green);
+        .signal-mid {
+            color: var(--yellow);
         }
 
-        /* Found Password */
-        .found-box {
-            background: rgba(0, 40, 0, 0.9);
-            border: 2px solid var(--matrix-green);
+        .signal-low {
+            color: var(--red);
+        }
+
+        /* Found Card */
+        .found-card {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 255, 136, 0.05));
+            border: 2px solid var(--green);
+            border-radius: 12px;
             padding: 30px;
             text-align: center;
             margin-top: 20px;
-            animation: foundPulse 1s infinite;
+            animation: successGlow 2s infinite;
         }
 
-        @keyframes foundPulse {
+        @keyframes successGlow {
 
             0%,
             100% {
-                box-shadow: 0 0 20px var(--matrix-green);
+                box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
             }
 
             50% {
-                box-shadow: 0 0 40px var(--matrix-green), 0 0 60px var(--matrix-green);
+                box-shadow: 0 0 40px rgba(0, 255, 136, 0.6);
             }
         }
 
         .found-title {
             font-family: 'Orbitron', sans-serif;
             font-size: 1.5rem;
+            color: var(--green);
             margin-bottom: 15px;
-            text-shadow: var(--glow-green);
         }
 
         .found-password {
+            font-family: 'Orbitron', sans-serif;
             font-size: 2rem;
-            letter-spacing: 5px;
-            background: rgba(0, 0, 0, 0.5);
+            font-weight: 700;
+            color: white;
+            background: rgba(0, 255, 136, 0.2);
             padding: 15px 30px;
+            border-radius: 8px;
             display: inline-block;
-            border: 1px solid var(--matrix-green);
+            letter-spacing: 3px;
         }
 
         /* Spinner */
         .spinner {
             width: 20px;
             height: 20px;
-            border: 2px solid transparent;
-            border-top-color: var(--matrix-green);
+            border: 3px solid transparent;
+            border-top-color: currentColor;
             border-radius: 50%;
             animation: spin 1s linear infinite;
             display: inline-block;
-            margin-right: 10px;
         }
 
         @keyframes spin {
@@ -639,102 +619,81 @@
         /* Footer */
         .footer {
             text-align: center;
-            padding: 30px;
+            padding: 25px;
             color: var(--text-dim);
-            font-size: 0.8rem;
-            border-top: 1px solid var(--border-green);
-            margin-top: 30px;
+            font-size: 0.85rem;
+            margin-top: 20px;
         }
 
-        /* Typing cursor */
-        .cursor {
-            display: inline-block;
-            width: 10px;
-            height: 1.2em;
-            background: var(--matrix-green);
-            animation: cursorBlink 1s step-end infinite;
-            margin-left: 5px;
+        .footer a {
+            color: var(--cyan);
+            text-decoration: none;
         }
 
-        @keyframes cursorBlink {
-
-            0%,
-            100% {
-                opacity: 1;
-            }
-
-            50% {
-                opacity: 0;
-            }
+        .footer a:hover {
+            text-decoration: underline;
         }
     </style>
 </head>
 
 <body>
-    <!-- Matrix Background -->
-    <canvas id="matrix-bg"></canvas>
-
-    <!-- CRT Effect -->
-    <div class="crt-overlay"></div>
+    <canvas id="bg-canvas"></canvas>
+    <div class="grid-overlay"></div>
 
     <div class="container">
-        <!-- ASCII Logo -->
+        <!-- Header -->
         <header class="header">
-            <pre class="ascii-logo">
-██╗    ██╗██╗███████╗██╗    ███████╗███████╗ ██████╗
-██║    ██║██║██╔════╝██║    ██╔════╝██╔════╝██╔════╝
-██║ █╗ ██║██║█████╗  ██║    ███████╗█████╗  ██║     
-██║███╗██║██║██╔══╝  ██║    ╚════██║██╔══╝  ██║     
-╚███╔███╔╝██║██║     ██║    ███████║███████╗╚██████╗
- ╚══╝╚══╝ ╚═╝╚═╝     ╚═╝    ╚══════╝╚══════╝ ╚═════╝
-            </pre>
-            <p class="subtitle">[ PENETRATION TESTING FRAMEWORK ]</p>
+            <h1 class="logo">
+                <span class="logo-icon">⚡</span> WIFISEC
+            </h1>
+            <p class="subtitle">Cyberpunk Edition • WiFi Penetration Testing</p>
             <div class="status-bar">
                 <div class="status-item">
                     <div class="status-dot"></div>
-                    <span>SYSTEM::ONLINE</span>
+                    <span>System Online</span>
                 </div>
-                <div class="status-item">
-                    <span id="current-time">00:00:00</span>
-                </div>
-                <div class="status-item">
-                    <span id="wordlist-count">LOADING...</span>
+                <div class="status-item" id="time-display">00:00:00</div>
+                <div class="status-item" id="db-count">Loading...</div>
+                <div class="status-item" id="attack-status-bar" style="display: none;">
+                    <div class="status-dot attack"></div>
+                    <span>Attacking</span>
                 </div>
             </div>
         </header>
 
         <!-- Attack Panel -->
-        <div class="terminal-box full-width" style="margin-bottom: 20px;">
-            <div class="terminal-header">
-                <span class="terminal-title">🔓 BRUTEFORCE_ATTACK.exe</span>
+        <div class="card full-width" style="margin-bottom: 20px;">
+            <div class="card-header attack">
+                <h2 class="card-title red">🔓 BRUTEFORCE ATTACK</h2>
+                <span id="attack-indicator" style="color: var(--text-dim);">● IDLE</span>
             </div>
-            <div class="terminal-body">
-                <select class="matrix-select" id="network-select">
-                    <option value="">> SELECT_TARGET_NETWORK...</option>
+            <div class="card-body">
+                <select class="cyber-select" id="network-select">
+                    <option value="">-- Select Target Network --</option>
                 </select>
 
                 <div class="stats-grid">
-                    <div class="stat-box">
-                        <div class="stat-label">TARGET</div>
-                        <div class="stat-value" id="target-ssid">NULL</div>
+                    <div class="stat-card">
+                        <div class="stat-label">Target</div>
+                        <div class="stat-value cyan" id="target-ssid">-</div>
                     </div>
-                    <div class="stat-box">
-                        <div class="stat-label">STATUS</div>
-                        <div class="stat-value" id="attack-status">IDLE</div>
+                    <div class="stat-card">
+                        <div class="stat-label">Status</div>
+                        <div class="stat-value purple" id="current-status">Idle</div>
                     </div>
-                    <div class="stat-box">
-                        <div class="stat-label">CURRENT_KEY</div>
-                        <div class="stat-value active" id="current-password">----</div>
+                    <div class="stat-card">
+                        <div class="stat-label">Current Password</div>
+                        <div class="stat-value orange" id="current-password">-</div>
                     </div>
-                    <div class="stat-box">
-                        <div class="stat-label">ATTEMPTS</div>
-                        <div class="stat-value" id="tried-count">0</div>
+                    <div class="stat-card">
+                        <div class="stat-label">Attempts</div>
+                        <div class="stat-value yellow" id="tried-count">0</div>
                     </div>
                 </div>
 
-                <div class="progress-container">
+                <div class="progress-wrap">
                     <div class="progress-label">
-                        <span>PROGRESS: <span id="progress-count">0 / 0</span></span>
+                        <span>Progress: <span id="progress-count">0 / 0</span></span>
                         <span id="progress-percent">0%</span>
                     </div>
                     <div class="progress-bar">
@@ -742,11 +701,11 @@
                     </div>
                 </div>
 
-                <button class="matrix-btn" id="btn-attack" onclick="startAttack()">
-                    [ INITIATE_BRUTEFORCE ]
+                <button class="btn btn-attack" id="btn-attack" onclick="startAttack()">
+                    🔓 Start Bruteforce Attack
                 </button>
-                <button class="matrix-btn danger" id="btn-stop" onclick="stopAttack()" style="display: none;">
-                    [ TERMINATE_ATTACK ]
+                <button class="btn btn-stop" id="btn-stop" onclick="stopAttack()" style="display: none;">
+                    ⏹️ Stop Attack
                 </button>
 
                 <div id="found-container"></div>
@@ -755,188 +714,189 @@
 
         <!-- Bottom Grid -->
         <div class="main-grid">
-            <!-- Network Scanner -->
-            <div class="terminal-box">
-                <div class="terminal-header">
-                    <span class="terminal-title">📡 NETWORK_SCANNER</span>
-                    <button class="matrix-btn" style="width: auto; padding: 8px 20px; margin: 0;"
-                        onclick="scanNetworks()">
-                        [ SCAN ]
-                    </button>
+            <!-- Scanner -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title cyan">📡 Network Scanner</h2>
+                    <button class="btn btn-scan" onclick="scanNetworks()">Scan</button>
                 </div>
-                <div class="terminal-body">
+                <div class="card-body">
                     <div class="network-list" id="network-list">
-                        <div style="text-align: center; color: var(--text-dim); padding: 40px;">
-                            > WAITING_FOR_SCAN...<span class="cursor"></span>
+                        <div style="text-align: center; padding: 40px; color: var(--text-dim);">
+                            Click <strong>Scan</strong> to discover networks
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- Attack Log -->
-            <div class="terminal-box">
-                <div class="terminal-header">
-                    <span class="terminal-title">💻 SYSTEM_LOG</span>
+            <!-- Log -->
+            <div class="card">
+                <div class="card-header">
+                    <h2 class="card-title purple">💻 Attack Log</h2>
                 </div>
-                <div class="terminal-body" style="padding: 0;">
-                    <div class="log-terminal" id="terminal-log">
-                        <div class="log-line log-info">[SYS] WIFISEC v3.0 MATRIX EDITION</div>
-                        <div class="log-line">[SYS] Loading password database...</div>
-                        <div class="log-line log-success">[OK] System initialized</div>
-                        <div class="log-line">[SYS] Awaiting target selection...<span class="cursor"></span></div>
+                <div class="card-body" style="padding: 0;">
+                    <div class="terminal">
+                        <div class="terminal-header">
+                            <div class="terminal-dot red"></div>
+                            <div class="terminal-dot yellow"></div>
+                            <div class="terminal-dot green"></div>
+                        </div>
+                        <div class="terminal-body" id="terminal-log">
+                            <div class="log-line log-info">[*] WIFISEC Cyberpunk v3.1</div>
+                            <div class="log-line">[*] System initialized</div>
+                            <div class="log-line">[*] Ready for attack...</div>
+                        </div>
                     </div>
                 </div>
             </div>
         </div>
 
         <footer class="footer">
-            ⚠️ AUTHORIZED SECURITY TESTING ONLY ⚠️
-            <br>WIFISEC v3.0 | MATRIX EDITION | USE RESPONSIBLY
+            ⚠️ For authorized security testing only. Use responsibly.
+            <br>WIFISEC v3.1 | <a href="https://github.com/nguyenthienminh01/Chore" target="_blank">GitHub</a>
         </footer>
     </div>
 
     <script>
         // Matrix Rain Background
-        const canvas = document.getElementById('matrix-bg');
+        const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
 
-        function initMatrix() {
+        function initCanvas() {
             canvas.width = window.innerWidth;
             canvas.height = window.innerHeight;
         }
-        initMatrix();
-        window.addEventListener('resize', initMatrix);
+        initCanvas();
+        window.addEventListener('resize', initCanvas);
 
-        const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-        const fontSize = 16;
-        let columns = canvas.width / fontSize;
+        // Matrix characters (Katakana + numbers + symbols)
+        const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ@#$%&*';
+        const fontSize = 14;
+        let columns = Math.floor(canvas.width / fontSize);
         let drops = [];
 
+        // Initialize drops
         for (let i = 0; i < columns; i++) {
             drops[i] = Math.random() * -100;
         }
 
         function drawMatrix() {
-            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            // Semi-transparent black to create trail effect
+            ctx.fillStyle = 'rgba(10, 14, 23, 0.05)';
             ctx.fillRect(0, 0, canvas.width, canvas.height);
 
-            ctx.fillStyle = '#00ff41';
             ctx.font = fontSize + 'px monospace';
 
             for (let i = 0; i < drops.length; i++) {
+                // Random character
                 const char = chars[Math.floor(Math.random() * chars.length)];
                 const x = i * fontSize;
                 const y = drops[i] * fontSize;
 
-                // Brighter for the head
-                if (Math.random() > 0.95) {
-                    ctx.fillStyle = '#ffffff';
+                // Gradient effect - brighter at the head
+                if (Math.random() > 0.98) {
+                    ctx.fillStyle = '#ffffff'; // Bright white head
+                } else if (Math.random() > 0.9) {
+                    ctx.fillStyle = '#00ff88'; // Bright green
                 } else {
-                    ctx.fillStyle = `rgba(0, 255, 65, ${Math.random() * 0.5 + 0.5})`;
+                    ctx.fillStyle = `rgba(0, 255, 100, ${Math.random() * 0.5 + 0.2})`; // Fading green
                 }
 
                 ctx.fillText(char, x, y);
 
+                // Reset drop when it goes off screen
                 if (y > canvas.height && Math.random() > 0.975) {
                     drops[i] = 0;
                 }
                 drops[i]++;
             }
+
+            requestAnimationFrame(drawMatrix);
         }
 
-        setInterval(drawMatrix, 33);
+        // Handle resize
+        window.addEventListener('resize', () => {
+            columns = Math.floor(canvas.width / fontSize);
+            drops = [];
+            for (let i = 0; i < columns; i++) {
+                drops[i] = Math.random() * -100;
+            }
+        });
+
+        drawMatrix();
 
         // Clock
-        function updateClock() {
-            document.getElementById('current-time').textContent =
+        setInterval(() => {
+            document.getElementById('time-display').textContent =
                 new Date().toLocaleTimeString('en-US', { hour12: false });
-        }
-        setInterval(updateClock, 1000);
-        updateClock();
+        }, 1000);
 
-        // Load wordlist info
-        async function loadWordlistInfo() {
-            try {
-                const res = await fetch('/api/wordlists');
-                const data = await res.json();
-                if (data.success) {
-                    document.getElementById('wordlist-count').textContent =
-                        `DB::${data.total.toLocaleString()}_KEYS`;
-                }
-            } catch (e) { }
-        }
-        loadWordlistInfo();
+        // Load DB info
+        fetch('/api/wordlists').then(r => r.json()).then(data => {
+            if (data.success) {
+                document.getElementById('db-count').textContent =
+                    data.total.toLocaleString() + ' passwords';
+            }
+        }).catch(() => { });
 
-        // Scan Networks
+        // Scan
         async function scanNetworks() {
             const list = document.getElementById('network-list');
             const select = document.getElementById('network-select');
-
-            list.innerHTML = '<div style="text-align: center; padding: 40px;"><div class="spinner"></div> SCANNING...</div>';
-            addLog('[SYS] Initiating network scan...', 'info');
+            list.innerHTML = '<div style="text-align:center;padding:40px;"><div class="spinner" style="width:30px;height:30px;border-width:3px;margin:0 auto;color:var(--cyan);"></div><br>Scanning...</div>';
+            addLog('[*] Scanning networks...', 'info');
 
             try {
                 const res = await fetch('/api/scan');
                 const data = await res.json();
 
                 if (data.success && data.networks.length > 0) {
-                    select.innerHTML = '<option value="">> SELECT_TARGET...</option>';
+                    select.innerHTML = '<option value="">-- Select Target --</option>';
                     list.innerHTML = '';
 
                     data.networks.forEach(net => {
-                        // Dropdown
-                        const opt = document.createElement('option');
-                        opt.value = net.ssid;
-                        opt.textContent = `${net.ssid} [${net.signal}%]`;
-                        select.appendChild(opt);
+                        select.innerHTML += `<option value="${net.ssid}">${net.ssid} (${net.signal}%)</option>`;
 
-                        // List
-                        const signalBars = Math.ceil(net.signal / 25);
+                        const sigClass = net.signal >= 70 ? 'signal-high' : net.signal >= 40 ? 'signal-mid' : 'signal-low';
                         list.innerHTML += `
                             <div class="network-item" onclick="selectNetwork('${net.ssid}')">
                                 <div>
                                     <div class="network-ssid">${net.ssid}</div>
-                                    <div class="network-details">${net.auth} | CH:${net.channel || 'N/A'}</div>
+                                    <div class="network-meta">${net.auth} • CH ${net.channel || 'N/A'}</div>
                                 </div>
-                                <div class="signal-meter">
-                                    ${[1, 2, 3, 4].map(i => `<div class="signal-bar ${i <= signalBars ? 'active' : ''}" style="height: ${i * 6}px;"></div>`).join('')}
-                                </div>
+                                <div class="signal-value ${sigClass}">${net.signal}%</div>
                             </div>
                         `;
                     });
-
-                    addLog(`[OK] Found ${data.networks.length} networks`, 'success');
+                    addLog('[+] Found ' + data.networks.length + ' networks', 'success');
                 } else {
-                    list.innerHTML = '<div style="text-align: center; color: #ff0040; padding: 40px;">NO_NETWORKS_FOUND</div>';
-                    addLog('[ERR] No networks detected', 'error');
+                    list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--red);">No networks found</div>';
+                    addLog('[-] No networks found', 'error');
                 }
             } catch (e) {
-                list.innerHTML = '<div style="text-align: center; color: #ff0040; padding: 40px;">SCAN_FAILED</div>';
-                addLog('[ERR] Scan failed: ' + e.message, 'error');
+                list.innerHTML = '<div style="text-align:center;padding:40px;color:var(--red);">Scan failed</div>';
+                addLog('[-] Scan error', 'error');
             }
         }
 
         function selectNetwork(ssid) {
             document.getElementById('network-select').value = ssid;
-            document.getElementById('target-ssid').textContent = ssid.substring(0, 15) + (ssid.length > 15 ? '...' : '');
-            addLog(`[SYS] Target acquired: ${ssid}`, 'info');
+            document.getElementById('target-ssid').textContent = ssid.length > 18 ? ssid.substring(0, 18) + '...' : ssid;
+            addLog('[*] Target: ' + ssid, 'info');
         }
 
         // Attack
-        let statusInterval = null;
+        let pollInterval = null;
 
         async function startAttack() {
             const ssid = document.getElementById('network-select').value;
-            if (!ssid) {
-                addLog('[ERR] No target selected!', 'error');
-                return;
-            }
+            if (!ssid) { alert('Select a network first!'); return; }
 
             const btn = document.getElementById('btn-attack');
-            const stopBtn = document.getElementById('btn-stop');
             btn.disabled = true;
-            btn.innerHTML = '<span class="spinner"></span> INITIALIZING...';
-            stopBtn.style.display = 'block';
+            btn.innerHTML = '<span class="spinner"></span> Starting...';
+            document.getElementById('btn-stop').style.display = 'block';
+            document.getElementById('attack-status-bar').style.display = 'flex';
 
             try {
                 const res = await fetch('/api/bruteforce/start', {
@@ -947,36 +907,33 @@
                 const data = await res.json();
 
                 if (data.success) {
-                    addLog(`[ATK] Bruteforce initiated on: ${ssid}`, 'success');
-                    document.getElementById('attack-status').textContent = 'RUNNING';
-                    document.getElementById('attack-status').classList.add('active');
-                    startPolling();
+                    addLog('[+] Attack started on: ' + ssid, 'success');
+                    document.getElementById('attack-indicator').textContent = '● RUNNING';
+                    document.getElementById('attack-indicator').style.color = 'var(--orange)';
+                    document.getElementById('current-status').textContent = 'Running';
+                    pollInterval = setInterval(pollStatus, 400);
                 } else {
-                    addLog('[ERR] ' + data.error, 'error');
+                    addLog('[-] Error: ' + data.error, 'error');
                     resetUI();
                 }
             } catch (e) {
-                addLog('[ERR] ' + e.message, 'error');
+                addLog('[-] Failed to start', 'error');
                 resetUI();
             }
         }
 
         async function stopAttack() {
             await fetch('/api/bruteforce/stop', { method: 'POST' });
-            addLog('[SYS] Attack terminated by user', 'warning');
+            addLog('[!] Attack stopped', 'warning');
         }
 
-        function startPolling() {
-            statusInterval = setInterval(updateStatus, 300);
-        }
-
-        async function updateStatus() {
+        async function pollStatus() {
             try {
                 const res = await fetch('/api/bruteforce/status');
                 const data = await res.json();
 
                 if (data.success) {
-                    document.getElementById('current-password').textContent = data.current || '----';
+                    document.getElementById('current-password').textContent = data.current || '-';
                     document.getElementById('tried-count').textContent = data.tried || 0;
 
                     const pct = data.total > 0 ? Math.round((data.tried / data.total) * 100) : 0;
@@ -984,66 +941,60 @@
                     document.getElementById('progress-percent').textContent = pct + '%';
                     document.getElementById('progress-fill').style.width = pct + '%';
 
-                    if (data.log && data.log.length > 0) {
+                    if (data.log?.length) {
                         const last = data.log[data.log.length - 1];
-                        if (window.lastLog !== last) {
-                            window.lastLog = last;
-                            addLog(last);
-                        }
+                        if (window.lastLog !== last) { window.lastLog = last; addLog(last); }
                     }
 
-                    if (data.found) {
-                        showFound(data.password);
-                        stopPolling();
-                    } else if (!data.running) {
-                        stopPolling();
-                    }
+                    if (data.found) { showFound(data.password); stopPoll(); }
+                    else if (!data.running) { stopPoll(); }
                 }
             } catch (e) { }
         }
 
-        function stopPolling() {
-            if (statusInterval) {
-                clearInterval(statusInterval);
-                statusInterval = null;
-            }
+        function stopPoll() {
+            if (pollInterval) { clearInterval(pollInterval); pollInterval = null; }
             resetUI();
         }
 
         function resetUI() {
             document.getElementById('btn-attack').disabled = false;
-            document.getElementById('btn-attack').innerHTML = '[ INITIATE_BRUTEFORCE ]';
+            document.getElementById('btn-attack').innerHTML = '🔓 Start Bruteforce Attack';
             document.getElementById('btn-stop').style.display = 'none';
-            document.getElementById('attack-status').textContent = 'IDLE';
-            document.getElementById('attack-status').classList.remove('active');
+            document.getElementById('attack-indicator').textContent = '● IDLE';
+            document.getElementById('attack-indicator').style.color = 'var(--text-dim)';
+            document.getElementById('current-status').textContent = 'Idle';
+            document.getElementById('attack-status-bar').style.display = 'none';
         }
 
-        function showFound(password) {
+        function showFound(pw) {
             document.getElementById('found-container').innerHTML = `
-                <div class="found-box">
-                    <div class="found-title">✓ ACCESS_GRANTED ✓</div>
-                    <div class="found-password">${password}</div>
+                <div class="found-card">
+                    <div class="found-title">🎉 PASSWORD CRACKED!</div>
+                    <div class="found-password">${pw}</div>
                 </div>
             `;
-            document.getElementById('attack-status').textContent = 'CRACKED';
-            addLog(`[SUCCESS] PASSWORD_CRACKED: ${password}`, 'success');
+            document.getElementById('attack-indicator').textContent = '● CRACKED';
+            document.getElementById('attack-indicator').style.color = 'var(--green)';
+            document.getElementById('current-status').textContent = 'Success';
+            addLog('[+] PASSWORD FOUND: ' + pw, 'success');
         }
 
         function addLog(msg, type = '') {
             const log = document.getElementById('terminal-log');
             const line = document.createElement('div');
             line.className = 'log-line';
-            if (msg.includes('[OK]') || msg.includes('[SUCCESS]') || msg.includes('[+]')) line.className += ' log-success';
-            else if (msg.includes('[ERR]') || msg.includes('[-]')) line.className += ' log-error';
-            else if (msg.includes('[WARN]') || msg.includes('[!]')) line.className += ' log-warning';
-            else if (msg.includes('[SYS]') || msg.includes('[*]') || msg.includes('[ATK]')) line.className += ' log-info';
+            if (msg.includes('[+]')) line.className += ' log-success';
+            else if (msg.includes('[-]')) line.className += ' log-error';
+            else if (msg.includes('[!]')) line.className += ' log-warning';
+            else if (msg.includes('[*]')) line.className += ' log-info';
             line.textContent = msg;
             log.appendChild(line);
             log.scrollTop = log.scrollHeight;
         }
 
-        // Auto scan on load
-        setTimeout(scanNetworks, 1500);
+        // Auto scan
+        setTimeout(scanNetworks, 1000);
     </script>
 </body>
 
