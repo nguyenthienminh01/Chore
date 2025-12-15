@@ -1,0 +1,730 @@
+<!DOCTYPE html>
+<html lang="vi">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>WiFi Brute Force Attack | WIFISEC</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;600;700&family=Orbitron:wght@400;500;600;700;800;900&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --bg-primary: #0a0a0f;
+            --bg-secondary: #0d1117;
+            --bg-card: rgba(13, 17, 23, 0.9);
+            --border-color: rgba(255, 0, 64, 0.3);
+            --text-primary: #ff0040;
+            --text-secondary: #00ff88;
+            --text-muted: #8b949e;
+            --accent-red: #ff0040;
+            --accent-green: #00ff88;
+            --accent-cyan: #00ffff;
+            --accent-yellow: #f7c948;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'JetBrains Mono', monospace;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            min-height: 100vh;
+        }
+
+        #matrix-canvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 0;
+            opacity: 0.1;
+        }
+
+        .container {
+            position: relative;
+            z-index: 10;
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 30px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 2.5rem;
+            font-weight: 900;
+            color: var(--accent-red);
+            text-shadow: 0 0 30px rgba(255, 0, 64, 0.5);
+            animation: flicker 2s infinite;
+        }
+
+        @keyframes flicker {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0.8;
+            }
+
+            52% {
+                opacity: 1;
+            }
+
+            54% {
+                opacity: 0.9;
+            }
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            margin-top: 10px;
+            font-size: 0.9rem;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: var(--accent-cyan);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        .panel {
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            margin-bottom: 30px;
+            overflow: hidden;
+        }
+
+        .panel::before {
+            content: '';
+            display: block;
+            height: 3px;
+            background: linear-gradient(90deg, var(--accent-red), var(--accent-yellow), var(--accent-red));
+        }
+
+        .panel-header {
+            padding: 20px 25px;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .panel-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .panel-body {
+            padding: 25px;
+        }
+
+        .network-select {
+            width: 100%;
+            padding: 15px 20px;
+            background: var(--bg-secondary);
+            border: 2px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            cursor: pointer;
+            margin-bottom: 20px;
+        }
+
+        .network-select:focus {
+            outline: none;
+            border-color: var(--accent-red);
+        }
+
+        .btn {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 1rem;
+            font-weight: 600;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            width: 100%;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+        }
+
+        .btn-attack {
+            background: linear-gradient(135deg, #ff0040, #ff4444);
+            color: white;
+            box-shadow: 0 0 30px rgba(255, 0, 64, 0.4);
+        }
+
+        .btn-attack:hover:not(:disabled) {
+            transform: scale(1.02);
+            box-shadow: 0 0 50px rgba(255, 0, 64, 0.6);
+        }
+
+        .btn-attack:disabled {
+            background: #333;
+            box-shadow: none;
+            cursor: not-allowed;
+        }
+
+        .btn-stop {
+            background: linear-gradient(135deg, #666, #444);
+            color: white;
+            margin-top: 15px;
+        }
+
+        .btn-stop:hover {
+            background: linear-gradient(135deg, #888, #666);
+        }
+
+        /* Terminal */
+        .terminal {
+            background: #000;
+            border: 1px solid #333;
+            border-radius: 8px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.85rem;
+            overflow: hidden;
+        }
+
+        .terminal-header {
+            background: #1a1a1a;
+            padding: 10px 15px;
+            display: flex;
+            gap: 8px;
+            border-bottom: 1px solid #333;
+        }
+
+        .terminal-btn {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-btn.red {
+            background: #ff5f56;
+        }
+
+        .terminal-btn.yellow {
+            background: #ffbd2e;
+        }
+
+        .terminal-btn.green {
+            background: #27ca40;
+        }
+
+        .terminal-body {
+            padding: 15px;
+            height: 300px;
+            overflow-y: auto;
+            color: var(--accent-green);
+        }
+
+        .terminal-body::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .terminal-body::-webkit-scrollbar-thumb {
+            background: #333;
+            border-radius: 3px;
+        }
+
+        .log-line {
+            margin-bottom: 5px;
+            opacity: 0;
+            animation: fadeIn 0.3s forwards;
+        }
+
+        @keyframes fadeIn {
+            to {
+                opacity: 1;
+            }
+        }
+
+        .log-success {
+            color: var(--accent-green);
+            font-weight: bold;
+        }
+
+        .log-error {
+            color: var(--accent-red);
+        }
+
+        .log-warning {
+            color: var(--accent-yellow);
+        }
+
+        .log-info {
+            color: var(--accent-cyan);
+        }
+
+        /* Progress */
+        .progress-container {
+            margin-bottom: 20px;
+        }
+
+        .progress-info {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 10px;
+            font-size: 0.85rem;
+        }
+
+        .progress-bar {
+            height: 20px;
+            background: #1a1a1a;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 1px solid #333;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--accent-red), var(--accent-yellow));
+            border-radius: 10px;
+            transition: width 0.3s;
+            position: relative;
+        }
+
+        .progress-fill::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+            animation: shimmer 1s infinite;
+        }
+
+        @keyframes shimmer {
+            0% {
+                transform: translateX(-100%);
+            }
+
+            100% {
+                transform: translateX(100%);
+            }
+        }
+
+        /* Status Card */
+        .status-card {
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border: 1px solid #333;
+        }
+
+        .status-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px solid #222;
+        }
+
+        .status-row:last-child {
+            border-bottom: none;
+        }
+
+        .status-label {
+            color: var(--text-muted);
+        }
+
+        .status-value {
+            font-weight: 600;
+        }
+
+        .status-running {
+            color: var(--accent-yellow);
+        }
+
+        .status-found {
+            color: var(--accent-green);
+        }
+
+        .status-idle {
+            color: var(--text-muted);
+        }
+
+        /* Found Password */
+        .found-card {
+            background: linear-gradient(135deg, rgba(0, 255, 136, 0.1), rgba(0, 255, 136, 0.05));
+            border: 2px solid var(--accent-green);
+            border-radius: 12px;
+            padding: 30px;
+            text-align: center;
+            margin-top: 20px;
+            animation: glow 2s infinite;
+        }
+
+        @keyframes glow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 20px rgba(0, 255, 136, 0.3);
+            }
+
+            50% {
+                box-shadow: 0 0 40px rgba(0, 255, 136, 0.6);
+            }
+        }
+
+        .found-title {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 1.5rem;
+            color: var(--accent-green);
+            margin-bottom: 15px;
+        }
+
+        .found-password {
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            background: rgba(0, 255, 136, 0.2);
+            padding: 15px 30px;
+            border-radius: 8px;
+            display: inline-block;
+            letter-spacing: 3px;
+        }
+
+        .warning-banner {
+            background: rgba(255, 0, 64, 0.1);
+            border: 1px solid var(--accent-red);
+            border-radius: 8px;
+            padding: 15px 20px;
+            margin-bottom: 20px;
+            color: var(--accent-red);
+            font-size: 0.85rem;
+            text-align: center;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 3px solid transparent;
+            border-top-color: currentColor;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <canvas id="matrix-canvas"></canvas>
+
+    <div class="container">
+        <a href="/" class="back-link">← Back to Scanner</a>
+
+        <header class="header">
+            <h1 class="logo">⚠️ BRUTEFORCE ATTACK</h1>
+            <p class="subtitle">WiFi Password Cracker - Educational Purpose Only</p>
+        </header>
+
+        <div class="warning-banner">
+            🚨 WARNING: Only use this tool on networks you own or have permission to test.
+            Unauthorized access is illegal!
+        </div>
+
+        <!-- Network Selection -->
+        <div class="panel">
+            <div class="panel-header">
+                <h2 class="panel-title">🎯 Select Target Network</h2>
+            </div>
+            <div class="panel-body">
+                <select class="network-select" id="network-select">
+                    <option value="">-- Click to scan and select a network --</option>
+                </select>
+                <button class="btn btn-attack" id="btn-attack" onclick="startAttack()">
+                    🔓 START BRUTEFORCE ATTACK
+                </button>
+                <button class="btn btn-stop" id="btn-stop" onclick="stopAttack()" style="display: none;">
+                    ⏹️ STOP ATTACK
+                </button>
+            </div>
+        </div>
+
+        <!-- Attack Status -->
+        <div class="panel">
+            <div class="panel-header">
+                <h2 class="panel-title">📊 Attack Status</h2>
+                <span id="status-indicator" class="status-idle">● IDLE</span>
+            </div>
+            <div class="panel-body">
+                <div class="status-card">
+                    <div class="status-row">
+                        <span class="status-label">Target SSID:</span>
+                        <span class="status-value" id="target-ssid">-</span>
+                    </div>
+                    <div class="status-row">
+                        <span class="status-label">Status:</span>
+                        <span class="status-value" id="attack-status">Idle</span>
+                    </div>
+                    <div class="status-row">
+                        <span class="status-label">Current Password:</span>
+                        <span class="status-value" id="current-password">-</span>
+                    </div>
+                </div>
+
+                <div class="progress-container">
+                    <div class="progress-info">
+                        <span>Progress: <span id="progress-count">0 / 0</span></span>
+                        <span id="progress-percent">0%</span>
+                    </div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%"></div>
+                    </div>
+                </div>
+
+                <div id="found-container" style="display: none;"></div>
+            </div>
+        </div>
+
+        <!-- Terminal Log -->
+        <div class="panel">
+            <div class="panel-header">
+                <h2 class="panel-title">💻 Attack Log</h2>
+            </div>
+            <div class="panel-body" style="padding: 0;">
+                <div class="terminal">
+                    <div class="terminal-header">
+                        <div class="terminal-btn red"></div>
+                        <div class="terminal-btn yellow"></div>
+                        <div class="terminal-btn green"></div>
+                    </div>
+                    <div class="terminal-body" id="terminal-log">
+                        <div class="log-line log-info">[*] Bruteforce module initialized</div>
+                        <div class="log-line">[*] Waiting for target selection...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Matrix Rain
+        const canvas = document.getElementById('matrix-canvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+
+        const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789@#$%^&*';
+        const fontSize = 14;
+        const columns = canvas.width / fontSize;
+        const drops = Array(Math.floor(columns)).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(10, 10, 15, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#ff0040';
+            ctx.font = fontSize + 'px monospace';
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars[Math.floor(Math.random() * chars.length)];
+                ctx.fillText(text, i * fontSize, drops[i] * fontSize);
+                if (drops[i] * fontSize > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 50);
+
+        // Load networks on page load
+        async function loadNetworks() {
+            const select = document.getElementById('network-select');
+            select.innerHTML = '<option value="">Loading networks...</option>';
+
+            try {
+                const response = await fetch('/api/scan');
+                const data = await response.json();
+
+                if (data.success && data.networks.length > 0) {
+                    select.innerHTML = '<option value="">-- Select a network --</option>';
+                    data.networks.forEach(net => {
+                        const option = document.createElement('option');
+                        option.value = net.ssid;
+                        option.textContent = `${net.ssid} (${net.signal}% - ${net.auth})`;
+                        select.appendChild(option);
+                    });
+                } else {
+                    select.innerHTML = '<option value="">No networks found - Click to retry</option>';
+                }
+            } catch (error) {
+                select.innerHTML = '<option value="">Error loading networks</option>';
+            }
+        }
+        loadNetworks();
+
+        // Attack functions
+        let statusInterval = null;
+
+        async function startAttack() {
+            const ssid = document.getElementById('network-select').value;
+            if (!ssid) {
+                alert('Please select a network first!');
+                return;
+            }
+
+            const btn = document.getElementById('btn-attack');
+            const stopBtn = document.getElementById('btn-stop');
+            btn.disabled = true;
+            btn.innerHTML = '<div class="spinner"></div> STARTING...';
+            stopBtn.style.display = 'block';
+
+            try {
+                const response = await fetch('/api/bruteforce/start', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ ssid })
+                });
+                const data = await response.json();
+
+                if (data.success) {
+                    addLog('[+] Attack started on: ' + ssid, 'success');
+                    document.getElementById('status-indicator').textContent = '● RUNNING';
+                    document.getElementById('status-indicator').className = 'status-running';
+                    startStatusPolling();
+                } else {
+                    addLog('[-] Failed: ' + data.error, 'error');
+                    btn.disabled = false;
+                    btn.innerHTML = '🔓 START BRUTEFORCE ATTACK';
+                    stopBtn.style.display = 'none';
+                }
+            } catch (error) {
+                addLog('[-] Error: ' + error.message, 'error');
+                btn.disabled = false;
+                btn.innerHTML = '🔓 START BRUTEFORCE ATTACK';
+            }
+        }
+
+        async function stopAttack() {
+            try {
+                await fetch('/api/bruteforce/stop', { method: 'POST' });
+                addLog('[!] Attack stopped by user', 'warning');
+            } catch (error) {
+                console.error(error);
+            }
+        }
+
+        function startStatusPolling() {
+            statusInterval = setInterval(updateStatus, 500);
+        }
+
+        async function updateStatus() {
+            try {
+                const response = await fetch('/api/bruteforce/status');
+                const data = await response.json();
+
+                if (data.success) {
+                    // Update UI
+                    document.getElementById('target-ssid').textContent = data.ssid || '-';
+                    document.getElementById('attack-status').textContent = data.running ? 'Running' : 'Stopped';
+                    document.getElementById('current-password').textContent = data.current || '-';
+
+                    const percent = data.total > 0 ? Math.round((data.tried / data.total) * 100) : 0;
+                    document.getElementById('progress-count').textContent = `${data.tried} / ${data.total}`;
+                    document.getElementById('progress-percent').textContent = `${percent}%`;
+                    document.getElementById('progress-fill').style.width = `${percent}%`;
+
+                    // Update log
+                    const logContainer = document.getElementById('terminal-log');
+                    if (data.log && data.log.length > 0) {
+                        const lastLog = data.log[data.log.length - 1];
+                        if (!logContainer.lastLogMessage || logContainer.lastLogMessage !== lastLog) {
+                            logContainer.lastLogMessage = lastLog;
+                            addLog(lastLog);
+                        }
+                    }
+
+                    // Check if found
+                    if (data.found) {
+                        showFound(data.password);
+                        stopPolling();
+                    }
+
+                    // Check if stopped
+                    if (!data.running) {
+                        stopPolling();
+                    }
+                }
+            } catch (error) {
+                console.error('Status error:', error);
+            }
+        }
+
+        function stopPolling() {
+            if (statusInterval) {
+                clearInterval(statusInterval);
+                statusInterval = null;
+            }
+            document.getElementById('btn-attack').disabled = false;
+            document.getElementById('btn-attack').innerHTML = '🔓 START BRUTEFORCE ATTACK';
+            document.getElementById('btn-stop').style.display = 'none';
+            document.getElementById('status-indicator').textContent = '● STOPPED';
+            document.getElementById('status-indicator').className = 'status-idle';
+        }
+
+        function showFound(password) {
+            const container = document.getElementById('found-container');
+            container.style.display = 'block';
+            container.innerHTML = `
+                <div class="found-card">
+                    <div class="found-title">🎉 PASSWORD FOUND!</div>
+                    <div class="found-password">${password}</div>
+                </div>
+            `;
+            document.getElementById('status-indicator').textContent = '● CRACKED!';
+            document.getElementById('status-indicator').className = 'status-found';
+            addLog('[+] PASSWORD CRACKED: ' + password, 'success');
+        }
+
+        function addLog(message, type = '') {
+            const log = document.getElementById('terminal-log');
+            const line = document.createElement('div');
+            line.className = 'log-line';
+            if (message.includes('[+]')) line.className += ' log-success';
+            else if (message.includes('[-]')) line.className += ' log-error';
+            else if (message.includes('[!]')) line.className += ' log-warning';
+            else if (message.includes('[*]')) line.className += ' log-info';
+            line.textContent = message;
+            log.appendChild(line);
+            log.scrollTop = log.scrollHeight;
+        }
+    </script>
+</body>
+
+</html>
